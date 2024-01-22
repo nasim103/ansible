@@ -1,0 +1,12 @@
+---
+- name: Copy file from local machine to remote machine
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy fromm server1 to server2
+      copy:
+        src: /opt/nmon/
+        dest: /home/linuxtechiee/
+        owner: linuxtechiee
+        group: linuxtechiee
+        mode: 0664
