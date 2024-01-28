@@ -1,7 +1,7 @@
 #! /bin/bash
 #Author=Nasim Ahmad
 HOSTNAME=`hostname -s`
-FILE="/tmp/$HOSTNAME-network-info.txt"
+FILE="/tmp/$HOSTNAME-network.txt"
 data="/tmp/$HOSTNAME-data.txt"
 echo "Network Card" >> $FILE
 echo -e "Device ID\tManufacturer and Model\tMAC Address\tMaximum Speed (in KB/s)\tStatus\tProduct Name\tAdaptor Type" >> $FILE

@@ -2,7 +2,7 @@
 Date=`date`
 #Author=Nasim Ahmad
 HOSTNAME=`hostname -s`
-FILE="/tmp/$HOSTNAME-group.txt"
+FILE="/tmp/$HOSTNAME-groups.txt"
 echo -e "Full Name\tName\tGID" >> $FILE
 pr -l 1 /etc/group | while read LINE
 do

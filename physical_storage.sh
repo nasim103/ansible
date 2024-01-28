@@ -2,7 +2,7 @@
 
 HOSTNAME=`hostname -s`
 FILE="/tmp/$HOSTNAME-physicalstorage-info.txt"
-data="/tmp/$HOSTNAME-phy-data.txt"
+data="/tmp/$HOSTNAME-data.txt"
 
 echo "Physical Storage" >> $FILE
 echo -e "Device ID\tCapacity (GB)\tAvailable Space (GB)\tUsed Space (GB)" >> $FILE

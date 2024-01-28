@@ -1,6 +1,6 @@
 #! /bin/bash
 HOSTNAME=`hostname -s`
-FILE="/tmp/$HOSTNAME-fstab-info.txt"
+FILE="/tmp/$HOSTNAME-fstab.txt"
 echo "FSTAB" >> $FILE
 echo -e "Device (fs_spec)\tMount Point (fs_file)\tFilesystem (fs_vfstype)\tOptions (fs_mntops)\tDump (fs_freq)\tMount Order (fs_passno)" >> $FILE
 column -t /etc/fstab -o ',' | while read LINE

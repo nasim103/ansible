@@ -1,7 +1,7 @@
 #!/bin/bash
 HOSTNAME=`hostname -s`
 FILE="/tmp/$HOSTNAME-rpmlist.txt"
-data="/tmp/$HOSTNAME-data-rpm.txt"
+data="/tmp/$HOSTNAME-data.txt"
 
 echo -e "Software Name\tVendor\tInstall Date\tVersion\tSize" > $FILE
 

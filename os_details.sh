@@ -2,7 +2,7 @@
 #Author=Nasim Ahmad
 HOSTNAME=`hostname -s`
 FILE="/tmp/$HOSTNAME-os-info.txt"
-data="/tmp/$HOSTNAME-osdata.txt"
+data="/tmp/$HOSTNAME-data.txt"
 
 PRODUCT=`uname -s`
 KERNEL=`uname -srnv`

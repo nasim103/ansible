@@ -3,7 +3,7 @@ Date=`date`
 #Author=Nasim Ahmad
 HOSTNAME=`hostname -s`
 FILE="/tmp/$HOSTNAME-logicaldisk-info.txt"
-data="/tmp/$HOSTNAME-lvdata.txt"
+data="/tmp/$HOSTNAME-data.txt"
 
 echo "Logical Storage" >> $FILE
 echo -e "Device ID\tLogical Storage Name\tCapacity (in GB)\tUsed Space (in GB)\tAvailable Space (in GB)\t% Available" >> $FILE

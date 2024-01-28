@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOSTNAME=`hostname -s`
-data="/tmp/$HOSTNAME-port-data.txt"
+data="/tmp/$HOSTNAME-data.txt"
 file="/tmp/$HOSTNAME-port.txt"
 echo -e "Protocol\tLocal Address\tForeign Address\tState" > $file
 

@@ -2,7 +2,7 @@
 
 HOSTNAME=`hostname -s`
 FILE="/tmp/$HOSTNAME-services.txt"
-data="/tmp/$HOSTNAME-services_data.txt"
+data="/tmp/$HOSTNAME-data.txt"
 echo -e "Name\tDefault Status\tStatus\tDescription" > $FILE
 
 #systemctl list-unit-files --type=service -all | sed 1d | head -n -2 | while read LINE

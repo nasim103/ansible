@@ -1,7 +1,7 @@
 #! /bin/bash
 HOSTNAME=`hostname -s`
-FILE="/tmp/$HOSTNAME-userinfo.txt"
-data="/tmp/$HOSTNAME-user-data.txt"
+FILE="/tmp/$HOSTNAME-users.txt"
+data="/tmp/$HOSTNAME-data.txt"
 echo -e "Group Name\tFull Name\tName\tUID\tExpiration Date\tLast Change" > $FILE
 pr -l 1 /etc/passwd| while read LINE
 do
