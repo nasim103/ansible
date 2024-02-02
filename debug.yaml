@@ -1,0 +1,30 @@
+#!/usr/bin/ansible-playbook
+ - name: Running debug module 
+   hosts: all
+   become: true
+   
+   vars:
+     test: "Hi, This is test from debug module"
+
+   tasks:
+      - name: Playing one test variable
+        debug:
+         var: test
+
+      - name: Print two lines with debug module
+        debug:
+          msg:
+           - "This is line1"
+           - "This is line2"
+
+      - name: Print ansibele module with verbosity
+        debug:
+         msg:
+           - "The hostname of this host is : {{ inventory_hostname }}"
+           - "The IP of this host is : {{ ansible_all_ipv4_addresses }}"
+
+      - name: Verbosity
+        debug:
+          msg:
+           - "Verbosity message"
+         

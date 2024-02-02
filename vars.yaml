@@ -1,0 +1,20 @@
+#!/usr/bin/ansible-playbook
+ - name: Running vars module 
+   hosts: all
+   become: true
+   vars:
+     test: "This is varibale from test"
+     my_name: "Nasim Ahmad"
+     my_age: 32
+     my_height: 5.6'
+     my_gender: True
+
+   tasks:
+    - name: Printing values of variable defined in the playbook 
+      debug:
+        var: test
+    - name: Printing my info
+      debug:
+        msg:
+         - "Hello!, My Name is {{ my_name }}, I am {{ my_age }} years old and my Height is {{ my_height }} and male is my gender- {{ my_gender }}"
+

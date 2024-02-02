@@ -1,0 +1,27 @@
+#!/usr/bin/ansible-playbook
+ - name: Running data colection module 
+   hosts: all
+   become: true
+
+
+   vars:
+     packages: "['unzip', 'wget', 'curl', 'zsh', 'sshd']"
+     city:
+      - Tokyo
+      - Dubai
+      - Bejing
+      - New York
+     web_servers: "{ 'linux':'httpd', 'unix':'apache2'}"
+   tasks:
+     - name: Printing sequence of data structure 
+       debug:
+         var: packages
+
+     - name: Printing sequence of data structure 
+       debug:
+         var: city 
+
+
+     - name: Printing sequence of data structure 
+       debug:
+         var: web_servers 
