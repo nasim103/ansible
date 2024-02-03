@@ -1,8 +1,8 @@
 #!/usr/bin/ansible-playbook
  - name: Running data colection module 
-   hosts: local
+   hosts: all
    become: true
-   gather_facts: false
+   gather_facts: true
 
    tasks:
      - name: Print shell version
@@ -12,3 +12,6 @@
      - name: Printing Bash version
        debug:
          var: bash_version.stdout
+         
+
+
