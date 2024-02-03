@@ -1,0 +1,23 @@
+#!/usr/bin/ansible-playbook
+ - name: Playing logical operator
+   hosts: localhost
+   become: true
+   gather_facts: false
+    
+   vars:
+     x : true
+     y: false
+     z: true
+     m: false
+
+
+   tasks:
+     - name: Playing logical operator
+       debug:
+         msg:
+          - " Logical operation between x and y is : {{ x and y }}"
+          - " Logical operation between x or  y is : {{ x or y }}"
+          - " Logical operation between x or z is : {{ x and z }}"
+          - " Logical operation between y  or m is : {{ y or m }}"
+ 
+     

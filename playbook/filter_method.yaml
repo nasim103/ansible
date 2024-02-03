@@ -1,0 +1,30 @@
+#!/usr/bin/ansible-playbook
+ - name: Runing filter and method playbook 
+   hosts: localhost
+   become: true
+   gather_facts: false
+
+   vars:
+     a: hELLo, THis is NasIM AHmad
+     b: 20
+     c: "82"
+    
+
+   tasks:
+    - name: Playing on filter 
+      debug:
+         msg:
+          - "The value of a is : {{ a }}"
+          - "The Additioin of b and c is {{ b+c|int }}"
+          - "Upper case of value a is {{ a|upper }}"
+          - "Lower case of value a is {{ a|lower }}"
+          - "Title of valuea is {{ a|title }}"
+
+    - name: Playing on Method 
+      debug:
+         msg:
+          - "The value of a is : {{ a }}"
+          - "The Additioin of b and c is {{ b+c|int }}"
+          - "Upper case of value a is {{ a.upper() }}"
+          - "Lower case of value a is {{ a.lower() }}"
+          - "Title of valuea is {{ a.title() }}"

@@ -1,0 +1,20 @@
+#!/usr/bin/ansible-playbook
+ - name: Runing filter and method playbook 
+   hosts: localhost
+   become: true
+   gather_facts: false
+
+   vars:
+     a: hELLo, THis is NasIM AHmad
+     b: 20
+     c: "82"
+    
+
+   tasks:
+    - name: Playing on filter 
+      debug:
+         msg:
+           - " The value of a is equal to b : {{ a == b }}"
+           - " The value of b is greater than c : {{ b > c }}"
+           - " The value of b is less than c : {{ b < c }}"
+           - " The value of a is greater than equal to  c : {{ a >= c }}"
