@@ -1,0 +1,37 @@
+#!/usr/bin/ansible-playbook
+ - name: Runing random and until loop
+   hosts: all 
+   become: true
+   gather_facts: true
+
+   vars:
+     alpha: [ 'a', 'b', 'c', 'd', 'e' ]
+     numbers: [1, 2, 3, 4, 5 ]
+   tasks:
+     - name: Playbook for random loops
+       debug:
+         msg: "{{ item }}"
+       with_random_choice:
+         - "Go to Townhall"
+         - "Take a coffee"
+         - "open the door"
+         - " Do Nothing"
+       tags: task1
+
+     - name: Playbook for loop over index 
+       debug:
+         msg: At any position {{ item.0 }} and the value is {{ item.1 }}
+       with_indexed_items:
+        - "{{ alpha }}"
+        - "{{ numbers }}"
+       tags: task2
+
+     - name: start apache
+       service:
+         name: httpd
+         state: started
+       register: http_out
+       until: http_out.changed == true
+       retries: 10
+       delay: 4
+       tags: task3
