@@ -1,0 +1,13 @@
+---
+- name: Enable/Disable Selinux
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Enable Selinux on all the server
+      lineinfile:
+         dest: /etc/selinux/config
+         regexp: "^SELINUX=*"
+         line: "SELINUX=enforcing"
+         state: present
+    - name: Enable Selinux at runtime
+      ansible.builtin.shell: setenforce 1

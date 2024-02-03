@@ -1,0 +1,27 @@
+#!/usr/bin/ansible-playbook
+ - name: Playing conditional statment
+   hosts: localhost
+   become: true
+   gather_facts: false
+   vars:
+     x: 40
+     y: 20
+   tasks:
+     - name: Playing conditional statment
+       debug:
+         msg:
+          - "The value of x is {{ x }} and y is {{ y }}"
+
+     - name: Playing conditional statment1
+       debug:
+         msg:
+          - "The value of x is greater than y"
+       when: x>y
+          
+
+     - name: Playing conditional statment2
+       debug:
+         msg:
+          - "The value of x is less than y"
+       when: x<y
+      

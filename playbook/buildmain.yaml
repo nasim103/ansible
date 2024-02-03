@@ -1,0 +1,176 @@
+---
+ - name: Playing Buildbook script
+   hosts: all
+   tasks:
+     - name: Running the Server Overview script
+       script: server-overview.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Physical Memory Array
+       script: phy_mem.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Physical Memory
+       script: ph-mem.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: CPU Details
+       script: cpu.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Bios Details
+       script: bios.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: FSTAB info
+       script: fstab.sh
+       ignore_errors: yes
+       changed_when: False
+       
+     - name: group info
+       script: group.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Network info
+       script: network.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+    
+     - name: Logical Storage
+       script: logical-storage.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Physical Storage
+       script: physical_storage.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+      
+     - name: process info  
+       script: process.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Port info
+       script: port.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: RPM Related tasks
+       block:
+        - name: Copy RPM script on remote Server.
+          copy:
+             src: rpmlist.sh
+             dest: "{{ ansible_user_dir }}/rpmlist.sh"
+             mode: 0700
+     - name: Running rpmscript on hosts
+       command: ./rpmlist.sh
+       args:
+         chdir: "{{ ansible_user_dir }}"
+       async: 3660
+       poll: 15
+       changed_when: False
+       ignore_errors: yes
+       become: true
+
+     - name: Delete script
+       file:
+         path: "{{ ansible_user_dir }}/rpmlist.sh"
+         state: absent
+       become: true
+
+     - name: User info
+       script: user.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true
+
+     - name: Services info
+       script: services.sh
+       ignore_errors: yes
+       changed_when: False
+       become: true 
+     - name: Make Sure Buildbook Directory exist on host Machine
+       local_action: 
+          module: file
+          dest: "/home/linuxtechiee/buildbook"
+          state: directory
+          mode: 0777
+       become: false
+
+     - name: Get all the files to the host machine
+       fetch:
+         src: "{{ item }}"
+         dest: "/home/linuxtechiee/buildbook/"
+         flat: yes
+         fail_on_missing: no
+       loop:
+         - "/tmp/{{ ansible_hostname }}-server-overview.txt"
+         - "/tmp/{{ ansible_hostname }}-hardware-info.txt"
+         - "/tmp/{{ ansible_hostname }}-processes.txt"
+         - "/tmp/{{ ansible_hostname }}-rpmlist.txt"
+         - "/tmp/{{ ansible_hostname }}-groups.txt"
+         - "/tmp/{{ ansible_hostname }}-users.txt"
+         - "/tmp/{{ ansible_hostname }}-services.txt"
+         - "/tmp/{{ ansible_hostname }}-network.txt"
+         - "/tmp/{{ ansible_hostname }}-fstab.txt"
+         - "/tmp/{{ ansible_hostname }}-logicaldisk-info.txt"
+         - "/tmp/{{ ansible_hostname }}-physicalstorage-info.txt"
+         - "/tmp/{{ ansible_hostname }}-port.txt"
+         - "/tmp/{{ ansible_hostname }}-physicalMEM-info.txt"
+         - "/tmp/{{ ansible_hostname }}-phy-mem-info.txt"
+         - "/tmp/{{ ansible_hostname }}-cpuinfo.txt"
+       become: true
+     - name: Make sure database folder exists
+       local_action:
+          module: file
+          name: "/home/linuxtechiee/buildbook-database"
+          state: directory
+       become: false
+
+     - name: Get all the databse files
+       ansible.builtin.fetch:
+         src: "/tmp/{{ ansible_hostname }}-data.txt"
+         dest: "/home/linuxtechiee/buildbook-database/"
+         flat: yes
+       become: true
+
+     - name: Delete the Directory from Remote host
+       ansible.builtin.file:
+         dest: "{{ item }}"
+         state: absent
+       loop:
+         - "/tmp/{{ ansible_hostname }}-server-overview.txt"
+         - "/tmp/{{ ansible_hostname }}-hardware-info.txt"
+         - "/tmp/{{ ansible_hostname }}-processes.txt"
+         - "/tmp/{{ ansible_hostname }}-rpmlist.txt"
+         - "/tmp/{{ ansible_hostname }}-groups.txt"
+         - "/tmp/{{ ansible_hostname }}-users.txt"
+         - "/tmp/{{ ansible_hostname }}-services.txt"
+         - "/tmp/{{ ansible_hostname }}-network.txt"
+         - "/tmp/{{ ansible_hostname }}-fstab.txt"
+         - "/tmp/{{ ansible_hostname }}-logicaldisk-info.txt"
+         - "/tmp/{{ ansible_hostname }}-physicalstorage-info.txt"
+         - "/tmp/{{ ansible_hostname }}-port.txt"
+         - "/tmp/{{ ansible_hostname }}-physicalMEM-info.txt"
+         - "/tmp/{{ ansible_hostname }}-phy-mem-info.txt"
+         - "/tmp/{{ ansible_hostname }}-cpuinfo.txt"
+         - "/tmp/{{ ansible_hostname }}-data.txt"
+       become: true

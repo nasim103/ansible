@@ -1,0 +1,17 @@
+#!/usr/bin/ansible-playbook
+ - name: Running data colection module 
+   hosts: all
+   become: true
+   gather_facts: true
+
+   tasks:
+     - name: Retrive the Bash Version 
+       shell: "bash --version"
+       register: bash_ver
+
+     - set_fact: 
+         bash_version: "{{ bash_ver.stdout }}"
+         my_value: Bash Version
+
+     - debug:
+         var: bash_version

@@ -1,0 +1,29 @@
+---
+- name: Installing package using yum module
+  hosts: all
+  become: yes
+  tasks:
+     - name: Installing httpd  and elinks package
+       yum: 
+          name: httpd,wget
+          state: latest
+     - name: Enable httpd service to restart the service at reboot
+       service:
+          name: httpd
+          enabled: yes   
+     - name: Configure httpd at port 8080
+       lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          regexp: '^Listen'
+          insertafter: '^#Listen'
+          line: Listen 8080  
+     - name: Starting httpd service
+       service:
+          name: httpd
+          state: restarted
+     - name: Configure firewall for apache
+       firewalld:
+          port: 8080/tcp
+          permanent: yes
+          zone: public
+          state: enabled

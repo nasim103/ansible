@@ -1,0 +1,34 @@
+#!/usr/bin/ansible-playbook
+ - name: Runing membership and test operator 
+   hosts: localhost
+   become: true
+   gather_facts: false
+
+   vars:
+     a: "HELLO"
+     b: "hello"
+     c: 10
+     d: 20
+     e: [ 5,10,15,20,30,100 ]
+     x: copy.yaml
+     y: playbook
+
+   tasks:
+     - name: membership playbook 
+       debug:
+         msg: 
+          - "The List is {{ e }}, value of c is : {{ c }}, and d is {{ d }}"
+          - "Is c is membere of e {{ c in e }}"
+          - "IS d is member of e {{ d in e }}"
+          - " Is 25 is member of e {{ 25 in e }}"
+          - " Is d is not member of e {{ d not in e }}"
+     - name: Test operator playbook 
+       debug:
+         msg:
+           - " Is a is defined {{ a is defined }}"
+           - "Is c is defined {{ c is defined }}"
+           - "Is a is lower {{ a is lower }} "
+           - " IS b is lower {{ b is lower }}"
+           - "Is d is even number{{ d is even }}"
+           - "Is x is file {{ x is file }}"
+           - "Is y is directory {{ y is directory }}"
