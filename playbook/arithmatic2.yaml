@@ -1,0 +1,20 @@
+#!/usr/bin/ansible-playbook
+ - name: Running Arithmatic Operation
+   hosts: localhost
+   become: true
+   gather_facts: false
+   vars_prompt:
+    - name: x
+      prompt: Enter the value of x
+      private: no
+    - name: y
+      prompt: Enter the value of y
+      private: no
+   tasks:
+      - name: Performing Arithmatic Operation
+        debug:
+          msg:
+            - "The value of x is {{ x }}"
+            - "The value of y is {{ y }}"
+            - "Addition of x and y is {{ x|int+y|int }}"
+

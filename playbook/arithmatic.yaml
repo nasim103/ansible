@@ -1,0 +1,19 @@
+#!/usr/bin/ansible-playbook
+ - name: Running Arithmatic Operation
+   hosts: localhost
+   become: true
+
+   vars:
+    a: 20
+    b: 40
+
+   tasks:
+      - name: Performing Arithmatic Operation
+        debug:
+          msg:
+            - "The vaule of a is {{ a }}"
+            - "The Value of b is {{ b }}"
+            - " Addition of a and b is : {{ a+b }}"
+            - "Substraction of  a and b is : {{ a-b }}"
+            - "Multiplication of a and b is {{ a*b }}"
+            - "Division of  a and b is {{ a/b }}"
