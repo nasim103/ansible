@@ -7,6 +7,6 @@
         user: name="{{ item.name }}" password="{{ password }}" comment="{{ item.comment }}" groups="{{ item.groups }}" update_password="on_create" state="{{ item.state }}"
 
         loop:
-         - { name: 'nasim', comment: 'NasimAhmad', groups: 'wheel', state: 'present' }
-         - { name: 'kalim', comment: 'kalimahmad', groups: 'wheel', state: 'present' }
-         - { name: 'wasim', comment: 'wasimahmad', groups: 'wheel', state: 'present' }
+         - { name: 'nasim', comment: 'NasimAhmad', groups: 'wheel', state: 'absent' }
+         - { name: 'kalim', comment: 'kalimahmad', groups: 'wheel', state: 'absent' }
+         - { name: 'wasim', comment: 'wasimahmad', groups: 'wheel', state: 'absent' }

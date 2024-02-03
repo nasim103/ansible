@@ -1,0 +1,38 @@
+#!/usr/bin/ansible-playbook
+ - name: Creating user with loop 
+   hosts: all 
+   become: true
+   gather_facts: true
+ 
+   vars:
+     user_list: [ 'testuser1', 'testuser2', 'testuser3', 'testuser4', 'testuser5', 'testuser6' ]
+   tasks:
+     - name: Create user with loop in one go
+       user:
+         name: "{{ item }}"
+         state: present
+         groups: wheel
+
+       with_items:
+         - testuser1
+         - testuser2
+         - testuser3
+         - testuser4
+
+     - name: Create user with multiple option
+       user: 
+         name: "{{ item.name }}"
+         state: present
+         groups: "{{ item.groups }}"
+       with_items:
+         - { 'name': 'testuser5', 'groups': 'wheel' }
+         - { 'name': 'testuser6', 'groups': 'wheel' }
+       tags: second
+
+     - name: Delete user with index loop
+       ansible.builtin.user:
+         name: "{{ item.0 }}"
+         state: absent
+       with_together:
+        - "{{ user_list }}"
+       tags: third
