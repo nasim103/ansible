@@ -1,0 +1,26 @@
+#!/usr/bin/ansible-playbook
+ - name: Playbook for block and rescue operation
+   hosts: localhost
+   tasks:
+
+     - block:
+       - name: Listing usr directory
+         command: "ls -l /usr/"
+         register: usr_out
+
+       - name: Listing /var directory
+         command: "ls -l /var/"
+         register: var_out
+
+       - name: Listing log  directory
+         command: "ls -l /var/log"
+         register: log_out
+       become: yes
+       
+       rescue:
+         - name: Cleanup the Playbook 
+           debug:
+             msg: "The task is recovering"
+       always:
+        - name: Alwasys execute
+          command: "ls -l ~/"

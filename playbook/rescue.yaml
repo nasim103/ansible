@@ -1,0 +1,61 @@
+#!/usr/bin/ansible-playbook
+ - name: Playbook for block and rescue operation
+   hosts: all 
+   
+   vars:
+      anonymous_enable: yes
+      local_enable: yes
+      write_enable: yes
+      anon_upload_enable: yes
+
+   tasks:
+      - block:
+        - name: Installed vsftpd package
+          yum: 
+            name: vsftpd
+            state: latest
+
+        - name: Bcakup vsftpd config file
+          copy:
+             src: /etc/vsftpd/vsftpd.conf
+             dest: /etc/vsftpd/vsftpd.conf.bkp
+             remote_src: yes
+
+        - name: Configure vsftpd using template
+          copy:
+            src: vsftpd.j2
+            dest: /etc/vsftpd/vsftpd.conf
+
+        - name: Displaying jinja template
+          command: "cat /etc/vsftpd/vsftpd.conf"
+          register: jinja_out
+        - debug: var=jinja_out
+        - name: Failing block module
+          command: "ls -l /not_exist/"
+        become: yes
+        rescue: 
+        - name: Something went wrong
+          debug:
+            msg: "Something went wrong"
+          
+        - name: Copy config file from Bcakup
+          copy:
+              src: /etc/vsftpd/vsftpd.conf.bkp
+              dest: /etc/vsftpd/vsftpd.conf
+              remote_src: yes  
+
+        - name: Display content of config file
+          command: "cat /etc/vsftpd/vsftpd.conf"
+          register: config_out
+        - debug: var=config_out
+
+
+        always:
+          - name: Starting vsftpd service
+            service:
+              name: vsftpd
+              state: started
+
+
+
+        
