@@ -1,0 +1,27 @@
+#!/usr/bin/ansible-playbook
+ - name: handler Playbook 
+   hosts: all 
+   become: true
+   gather_facts: true
+   
+   tasks:
+    - name: Install Apache server
+      yum:
+        name: httpd
+        state: latest
+      notify: 
+        - starting Apache service
+        - Restarting Apache service
+
+   handlers:  
+    - name: starting Apache service
+      service:
+       name: httpd
+       state: started
+
+    - name: Restarting Apache service
+      service:
+       name: httpd
+       state: restarted
+
+      

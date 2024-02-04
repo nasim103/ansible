@@ -1,12 +1,14 @@
 ---
-- name: Installing package using yum module
-  hosts: all
-  become: yes
-  tasks:
+ - name: Installing package using yum module
+   hosts: all
+   become: yes
+   tasks:
      - name: Installing httpd  and elinks package
        yum: 
-          name: httpd,wget
-          state: latest
+          name: httpd
+          state: absent
+       tags: task1
+
      - name: Enable httpd service to restart the service at reboot
        service:
           name: httpd

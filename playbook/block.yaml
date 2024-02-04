@@ -1,0 +1,30 @@
+#!/usr/bin/ansible-playbook
+ - name: Playbook for block and rescue operation
+   hosts: localhost
+   tasks:
+
+     - block:
+       - name: Listing usr directory
+         command: "ls -l /usr/"
+         register: usr_out
+
+       - name: Listing /var directory
+         command: "ls -l /var/"
+         register: var_out
+
+       - name: Listing Failed  directory
+         command: "ls -l /var/notexist"
+         register: noexist_out
+       become: yes
+       ignore_errors: true
+
+     - name: Listing /home directory
+       command: "ls -l ~/"
+       register: home_out
+
+     - debug: var=usr_out
+     - debug: var=var_out
+     - debug: var=noexist_out
+     - debug: var=home_out
+
+  
