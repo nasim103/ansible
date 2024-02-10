@@ -1,0 +1,6 @@
+---
+ - name: Installing web server using roles
+   hosts: all
+   become: yes
+   roles:
+       - /home/linuxtechiee/mycpode/ansible/roles/webserver
