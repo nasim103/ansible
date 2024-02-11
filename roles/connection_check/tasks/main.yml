@@ -1,0 +1,14 @@
+---
+ - name: Connection check for Linux hosts
+   wait_for:
+     host: "{{ HOST }}"
+     port: "{{ PORT }}"
+     timeout: "{{ TIMEOUT }}"
+   when: not ansible_os_family == "Window"
+ - name: Connection check for Window family
+   wait_for:
+     host: "{{ HOST}}"
+     port: "{{ PORT }}"
+     timeout: "{{ TIMEOUT }}"
+   when: ansible_os_family == "Window"
+

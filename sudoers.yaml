@@ -1,0 +1,6 @@
+---
+- name: Check sudoers.d file is Empty or not
+  hosts: all
+  gather_facts: false
+  roles:
+    - /home/linuxtechiee/mycode/ansible/roles/sudoers
