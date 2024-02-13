@@ -1,0 +1,5 @@
+---
+ - name: GET DNS DETAILS 
+   hosts: all 
+   roles:
+     - "/home/linuxtechiee/mycode/ansible/roles/get-dns-setting/"
