@@ -1,0 +1,49 @@
+---
+ - name: Include logrotate.d directory in conf file
+   lineinfile:
+     path: /etc/logrotate.conf
+     state: present
+     insertafter: '# RPM packages drop log rotation information into this directory'
+     line: include /etc/logrotate.d
+
+ - name: Deploy template for syslog conf
+   template:
+     src: syslog.conf.j2
+     dest: /etc/logrotate.d/syslog
+     owner: root
+     group: root
+     mode: 0644
+     backup: yes
+    
+ - name: Checking / partition before log rotate
+   shell: /usr/bin/df -h /var/log/| /usr/bin/awk '{if ($6 == "/") print $0}'
+   register: df_before
+
+ - name: Clear anything older than 30 days in log file
+   shell: find /var/log -type f -mtime +30 -delete
+   ignore_errors: yes
+
+ - name: Check space after clear the file
+   shell: /usr/bin/df -h /var/log/| /usr/bin/awk '{if ($6 == "/") print $0}'
+   register: df_after
+ 
+ - name: Rotate the log file
+   shell: "/usr/bin/logrotate -f /etc/logrotate.conf"
+   ignore_errors: yes
+
+ - name: check space fina time
+   shell: /usr/bin/df -h /var/log/| /usr/bin/awk '{if ($6 == "/") print $0}'
+   register: df_final
+
+ - name: Dispaly the space utilization
+   debug:
+     msg:
+       - "BEFORE {{ df_before }}"
+       - "AFTER {{ df_after }}"
+       - "FINAL {{ df_final }}"
+
+
+
+
+
+   

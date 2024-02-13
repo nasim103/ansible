@@ -1,0 +1,5 @@
+---
+ smtp_ip: 192.168.48.2
+ smtpconfig: /etc/postfix/main.cf
+ package: postfix
+ service_name: postfix

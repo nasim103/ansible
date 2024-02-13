@@ -1,0 +1,15 @@
+---
+ - name: restart ntpd
+   service:
+     name: ntpd
+     state: restarted
+     enabled: yes
+ - name: restart chronyd
+   service:
+     name: chronyd
+     state: restarted
+     enabled: yes
+
+
+
+# handlers file for ntpd

@@ -1,0 +1,8 @@
+---
+   java_package: java-11-openjdk
+   java_package1: java
+   alternative_path1: java-11-openjdk-11.0.18.0.10-3.el9.x86_64
+   alternative_path2: java-1.8.0-openjdk-1.8.0.402.b06-1.el7_9.x86_64
+   tomcat_version: 8.5.98
+   tomcat_port: 8090
+# vars file for tomcat

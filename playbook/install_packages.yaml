@@ -1,0 +1,21 @@
+---
+ - name: Install and start httpd service
+   hosts: all
+   gather_facts: false
+   become: yes
+   vars:
+      - package: postfix
+      - service_name: postfix
+   tasks:
+     - name: Install  package
+       yum: 
+         name: "{{ package}}"
+         state: latest
+        
+     - name: Start {{ service_name }} service
+       service:
+         name: "{{ service_name }}"
+         state: started
+
+         
+

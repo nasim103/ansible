@@ -1,0 +1,25 @@
+---
+ - name: Install and start httpd service
+   hosts: all
+   become: yes
+   vars:
+      custom_var: Hi, This is custom variable 
+   
+
+   tasks:
+     - name: Install httpd package
+       yum: 
+         name: httpd
+         state: latest
+        
+     - name: copy index.html.j2 file
+       template:
+         src: index.html.j2
+         dest: /usr/share/httpd/noindex/index.html 
+     - name: Start Apache service
+       service:
+         name: httpd
+         state: started
+
+         
+

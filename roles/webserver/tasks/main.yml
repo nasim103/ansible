@@ -1,0 +1,19 @@
+---
+# tasks file for webserver
+ - name: Install apache server on web server
+   yum: 
+     name: httpd  
+     state: latest
+
+ - name: configuring port
+   template:
+      src: config_httpd.j2
+      dest: /var/www/html/index.html
+      mode: 0664
+      owner: apache
+      group: apache
+
+ - name: Start the web server
+   service:
+     name: httpd
+     state: restarted

@@ -1,0 +1,62 @@
+---
+ - name: updating all base package
+   yum:
+     name: "*"
+     state: latest
+ - name: Installaing java Package on rhel9
+   yum:
+     name: "{{ java_package }}"
+     state: present
+   when: ansible_distribution_major_version == "9"
+
+ - name: Installaing java Package on rhel7
+   yum:
+     name: "{{ java_package1 }}"
+     state: present
+   when: ansible_distribution_major_version == "7"
+
+ - name: Set Alternative for java
+   alternatives: 
+        name: java
+        link: /usr/bin/java
+        path: /usr/lib/jvm/{{ alternative_path1 }}/bin/java
+   when: ansible_distribution_major_version == "9" 
+ - name: Set Alternative for java
+   alternatives: 
+        name: java
+        link: /bin/java
+        path: /usr/lib/jvm/{{ alternative_path2 }}/jre/bin/java
+   when: ansible_distribution_major_version == "7"
+
+ - name: Delete the existing tomcat tar file of this version
+   command: rm -rf /usr/local/apache-tomcat-{{ tomcat_version }}.tar.gz
+   ignore_errors: yes   
+
+ - name: Delete the tomcat file
+   command: rm -rf /usr/local/apache-tomcat-{{ tomcat_version }} && rm -rf /usr/local/tomcat
+   ignore_errors: yes   
+ - name: creating /usr/local folder
+   file: 
+     path: /usr/local
+     state: directory
+   ignore_errors: yes
+
+ - name: Download Tomcat 
+   get_url:
+       url: https://dlcdn.apache.org/tomcat/tomcat-8/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz
+       dest: /usr/local/
+
+ - name: Extract the Tomcat 
+   unarchive:
+        src: /usr/local/apache-tomcat-{{ tomcat_version }}.tar.gz
+        dest: /usr/local/
+        remote_src: yes
+ 
+ - name: Rename the tomcat file
+   command: mv /usr/local/apache-tomcat-{{ tomcat_version }} /usr/local/tomcat
+  
+ - name: Configuring tomcat port
+   template:
+        src: server.xml.j2
+        dest: /usr/local/tomcat/conf/server.xml
+   notify: Start Tomcat

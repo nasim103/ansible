@@ -1,0 +1,11 @@
+---
+ - name: Check if User home directory exist in home
+   shell: echo ~{{ user }}
+   register: home
+   changed_when: false
+
+ - name: This Tasks will fail when user home directory not in home
+   fail:
+     msg: "{{ user }} is not in /home/{{ user }}"
+   when: home.stdout.find('/home/' ~user) == -1
+    

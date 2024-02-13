@@ -1,0 +1,6 @@
+---
+ - name: Clear and delete the yum cache
+   hosts: all
+   gather_facts: false
+   roles:
+     - /home/linuxtechiee/mycode/ansible/roles/yum_cache

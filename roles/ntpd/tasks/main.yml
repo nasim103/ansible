@@ -1,0 +1,30 @@
+---
+ - name: Check ntpd service
+   systemd:
+     name: "ntpd"
+   register: ntpd_out
+
+ - debug: 
+       var: ntpd_out.status.ActiveState
+ 
+ - name: Check chronyd service
+   systemd:
+     name: "chronyd"
+   register: chrony_out
+
+ - debug:
+      var: chrony_out.status.ActiveState
+  
+ - import_tasks: timesync.yaml
+ 
+ - import_tasks: ntp.yaml
+   when: ansible_distribution_major_version < "8"
+
+ - import_tasks: chrony.yaml
+   when: ansible_distribution_major_version > "7"
+
+
+
+
+
+# tasks file for ntpd

@@ -1,0 +1,7 @@
+---
+ - name: configure SMTP
+   hosts: all
+   become: true
+   gather_facts: false
+   roles:
+     - "/home/linuxtechiee/mycode/ansible/roles/smtp"

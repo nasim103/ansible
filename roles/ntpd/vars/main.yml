@@ -1,0 +1,24 @@
+---
+  filename: /etc/ntp.conf
+  ntp_conf: /etc/ntp.conf
+  chrony_conf: /etc/chrony.conf
+  cis_enable_ntp: true
+  cis_enable_chrony: false
+
+  phx_location: false
+  phl_location: True
+
+  cis_time:
+      - 10.116.100.24 iburst
+      - 10.116.100.25
+
+  phx_times:
+      - 172.22.4.124
+      - 172.22.4.125
+      - 172.23.4.124
+      - 172.23.4.125
+
+  phl_times:
+    - 10.116.100.124 iburst
+    - 10.116.100.125
+# vars file for ntpd

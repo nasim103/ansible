@@ -1,0 +1,58 @@
+---
+ - name: Ensure ntp is configured in /etc/sysconfig
+   lineinfile:
+      dest: /etc/sysconfig/ntpd
+      regexp: '^OPTIONS='
+      line: 'OPTIONS=" -u ntpd:ntpd"'
+      state: present
+   when: cis_enable_ntp
+   notify: restart ntpd 
+
+
+ - name: Ensure ntp is configured /etc/ntp
+   lineinfile:
+      dest: /etc/ntp.conf
+      state: present
+      regexp: '^restrict -4 default'
+      line: 'restrict -4 default kod nomodify notrap nopeer noquery'
+      insertafter: EOF
+   when: cis_enable_ntp
+   notify: restart ntpd
+   
+
+ - name: Ensure NTP is configured
+   lineinfile:
+      dest: /etc/ntp.conf
+      state: present
+      regexp: '^restrict -6 default'
+      line: 'restrict -6 default kod nomodify notrap nopeer noquery'
+      insertafter: EOF
+   when: cis_enable_ntp
+   notify: restart ntpd
+
+ - name: Commenting out the existing line in /etc/ntp
+   replace:
+      backup: yes
+      path: "{{ filename }}"
+      regexp: "^(server.+)$"
+      replace: '#\g<1>'
+   notify: restart ntpd
+
+ - name: Adding new time server to /etc/ntp
+   lineinfile:
+      insertafter: "^#*server"
+      path: "{{ filename }}"
+      line: server {{ item }}
+   loop: "{{ phl_times}}"
+   notify: restart ntpd
+
+ - name: Adding main interface
+   lineinfile:
+      insertafter: EOF
+      path: "{{ filename }}"
+      line: interface listen {{ ansible_default_ipv4.address }}
+   notify: restart ntpd
+
+
+
+

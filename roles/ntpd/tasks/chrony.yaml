@@ -1,0 +1,34 @@
+---
+ - name: Ensure chronyd is configured
+   template:
+     src: chrony.conf.j2
+     dest: /etc/chrony.conf
+     owner: root
+     group: root
+     mode: 0644
+   when: cis_enable_chrony
+   notify: restart chronyd
+
+ - name: Ensure chrony is configured /etc/sysconfig/chronyd
+   lineinfile:
+     dest: /etc/sysconfig/chronyd
+     state: present
+     regexp: '^OPTIONS='
+     line: 'OPTIONS=\" -u chrony\"'
+   when: cis_enable_chrony
+   notify: restart chronyd
+   
+ - name:  commenting out the existing line
+   replace:
+     backup: yes
+     regexp: '^(server.+)$'
+     replace: '#\g<1>'
+     path: "{{ chrony_conf }}"
+   notify: restart chronyd
+
+ - name: Add new time server
+   lineinfile:
+     insertafter: '^#*server'
+     path: "{{ chrony_conf }}"
+     line: "{{ serverlist.split(',')}}"
+   notify: restart chronyd

@@ -1,0 +1,16 @@
+---
+ - name: Check if sudoers file is empty or not
+   find:
+     paths: '/etc/sudoers.d/'
+   register: sudoers_status
+   changed_when: false
+
+
+ - name: If the sudoers.d file is not Empty
+   fail:
+     msg: "Sudoers.d  file is not Empty"
+   when: sudoers_status.matched > 0
+
+ - name: Sudoers.d file is Empty
+   debug:
+      msg: "sudoers.d file is Empty"

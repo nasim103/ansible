@@ -1,0 +1,14 @@
+---
+ - name: Check Authentication for user
+   shell: grep {{ auth_user }} /etc/shadow|cut -d ':' -f 2 
+   register: auth_type
+   ignore_errors: yes
+   changed_when: false
+   check_mode: no
+   become: yes
+ - set_fact:
+     users: "{{ auth_type.stdout_lines[0] }}"
+ - name: Output
+   debug:
+     msg:  " The user is {{ users }}"
+

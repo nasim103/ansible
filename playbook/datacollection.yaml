@@ -1,0 +1,164 @@
+---
+ - name: Data collection
+   hosts: all
+   gather_facts: true
+   tasks:
+    - name: creating folder on in ansible node under /tmp directory
+      local_action:
+        module: file
+        path: "/tmp/data/{{ ansible_hostname }}"
+        state: directory
+        mode: 0777
+      become: false
+
+    - name: Create Audit directory on remote hosts 
+      file:
+         path: "{{ item }}"
+         state: directory
+         mode: 0777
+      loop:
+       - /tmp/data/{{ ansible_hostname }}
+       - /tmp/auditfile
+
+    - name: Fetch files /etc/passwd, /etc/group and /etc/krb5
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+        flat: yes
+      loop:
+       - "/etc/passwd"
+       - "/etc/group"
+       - "/etc/krb5.conf"
+
+    - name: Copy /etc/passwd and /etc/group to temp directory for later use
+      copy: 
+       src: "{{ item }}"
+       dest: "/tmp/data/{{ ansible_hostname }}/"
+       remote_src: yes
+      loop:
+       - "/etc/passwd"
+       - "/etc/group"
+
+    - name: Determining the location of sudoers file
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: sudoers_exist
+      loop:
+       - "/opt/sfw/etc/sudoers"
+       - "/usr/loca/etc/sudoers"
+       - "/etc/sudoers"
+
+    - name: Set the sudoers path tpo "/opt/sfw/etc/sudoers"
+      ansible.builtin.set_fact:
+        sudoers_found: "/opt/sfw/etc/sudoers"
+      when: sudoers_exist.results[0].stat.exists 
+
+    - name: Set the sudoers to "/usr/loca/etc/sudoers"
+      ansible.builtin.set_fact:
+        sudoers_found: "/usr/loca/etc/sudoers"
+      when: sudoers_exist.results[1].stat.exists
+
+    - name: Set the sudoers to "/etc/sudoers"
+      ansible.builtin.set_fact:
+        sudoers_found: "/etc/sudoers"
+      when: sudoers_exist.results[2].stat.exists
+
+    - name: Determining the location of syslog file 
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: syslog_out
+      loop:
+       - "/etc/syslog.conf"
+       - " /etc/rsyslog.conf"
+
+    - name: Set path to /etc/rsyslog.conf"
+      ansible.builtin.set_fact:
+        syslog_exist: "/etc/rsyslog.conf"
+      when: syslog_out.results[0].stat.exists
+
+    - name: Determining the location of "/etc/syslog.conf"
+      ansible.builtin.set_fact:
+        syslog_exist: "/etc/syslog.conf"
+      when: syslog_out.results[1].stat,exists 
+
+
+    - name: Determining the directoy rsyslog.d 
+      ansible.builtin.stat:
+        path: "/etc/rsyslog.d"
+      register: rsyslogd_found
+      tags: rsyslogd
+
+    - name: Fetch the syslog file 
+      ansible.builtin.fetch:
+        src: "{{ syslog_exist }}"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+        flat: yes
+      ignore_errors: yes
+
+    - name: Copy the rsyslog.d directory
+      shell: "cp -R {{ rsyslogd_found.stat.path }} /tmp/auditfile/"
+      when: rsyslogd_found.stat.exists
+      tags: rsyslogd
+
+    - name: Determining if /etc/pam.d/password-auth file exist 
+      ansible.builtin.stat:
+        path: "/etc/pam.d/password-auth"
+      register: pass_auth
+
+    - name: Fetch the password-auth file 
+      ansible.builtin.fetch:
+        src: "{{ pass_auth.stat.path }}"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+      when: pass_auth.stat.exists and ansible_system == "Linux"
+
+    - name: Fetch /etc/pam.d/system-auth and login.def
+      ansible.builtin.fetch:
+        src: "{{ item }}"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+        flat: yes
+      loop:
+       - "/etc/pam.d/system-auth"
+       - "/etc/login.defs"
+      when: ansible_system == "Linux"
+
+    - name: Copy /ect/shadow file to audit directory
+      shell: "sudo cp -R /etc/shadow /tmp/auditfile/"
+      when: ansible_system == "Linux"
+   
+    - name: Fetch /etc/security/user file
+      ansible.builtin.fetch:
+        src: "/etc/security/user"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+      when: ansible_system == "Aix"
+      ignore_errors: yes
+
+    - name: Compress the audit directory into tar
+      shell: "tar -zcvf /tmp/auditfile.tgz auditfile"
+      args: 
+         chdir: /tmp/
+      changed_when: true
+      tags: archive
+      become: yes
+
+
+    - name: Chaning permission of tar file
+      file:
+        path: "/tmp/auditfile.tgz"
+        mode: 0777
+      become: yes
+
+    - name: Fetch the tar file
+      ansible.builtin.fetch:
+        src: "/tmp/auditfile.tgz"
+        dest: "/tmp/data/{{ ansible_hostname }}/"
+      l
+    - name: Delete the tar file from remote hosts
+      ansible.builtin.file:
+        path: "/tmp/auditfile.tar.gz"
+        state: absent
+      become: yes
+    - name: Delete the Audit directory
+      ansible.builtin.file:
+        path: "/tmp/auditfile"
+        state: absent
+      become: yes
