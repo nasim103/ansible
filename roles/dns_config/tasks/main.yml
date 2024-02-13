@@ -1,0 +1,24 @@
+---
+ - name: Set dns = none in /etc/NetworkManager/NetworkManager.conf
+   ini_file:
+     path: /etc/NetworkManager/NetworkManager.conf
+     state: present
+     section: main
+     no_extra_spaces: yes
+     option: dns
+     value: none
+     owner: root
+     group: root
+     mode: 0644
+     backup: yes
+   notify: reload NetworkManager
+
+
+ - name: Deploye Template 
+   template: 
+     src: resolve.conf.j2
+     dest: /etc/resolv.conf
+     backup: yes
+   notify: reload NetworkManager
+
+# tasks file for dns_config

@@ -1,0 +1,15 @@
+---
+ - name: Configure rsyslog for RHEL 9 and above versions
+   lineinfile:
+     path: /etc/rsyslog.conf
+     insertafter: EOF
+     line: "Target={{ remote_ip }} port=514 protocol=tcp"
+   when: ansible_distribution_major_version > "8"
+
+ - name: Configure rsyslog for RHEL 8 and below version
+   lineinfile:
+     insertafter: "^#*.* @@remote-host:514"
+     line: "*.* @{{ remote_ip }}:514"
+     path: /etc/rsyslog.conf
+   when: ansible_distribution_major_version < "8"
+

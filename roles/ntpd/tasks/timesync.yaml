@@ -1,0 +1,45 @@
+---
+ - name: Install ntpd on rhel<8 version 
+   yum:
+      name: ntp
+      state: present
+   when: ansible_distribution_major_version < "8" 
+   
+ - name: Start ntpd service on <8 vserion
+   systemd:
+     name: ntpd
+     state: started
+     enabled: yes
+   when: ansible_distribution_major_version < "8"
+
+ - name: Ensure NTPD service stop and disable on rhel > 7 server
+   systemd:
+     name: ntpd
+     state: stopped
+     enabled: no
+   when: ansible_distribution_major_version > "7" and ntpd.service.state.ActiveState == "active"
+
+
+ - name: Ensure Chronyd is install on >8 version of RHEL
+   yum:
+     name: chrony
+     state: present
+     enabled: yes
+   when: ansible_distribution_major_version > "7"
+
+ - name: Start the Chronyd service on RHEL > 7 version
+   systemd:
+     name: chronyd
+     state: started
+     enabled: yes
+   when: ansible_distribution_major_version > "7"
+   
+ - name: Ensure chronyd service is disabled on RHEL <8 server
+   systemd:
+     name: chronyd
+     state: stopped
+     enabled: no
+   when: ansible_distribution_major_version < "7" and chronyd.service.state.ActiveState == "active"
+
+
+

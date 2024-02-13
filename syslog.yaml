@@ -1,0 +1,6 @@
+---
+ - name: Configuring syslog 
+   hosts: all
+   become: true
+   roles:
+      - /home/linuxtechiee/mycode/ansible/roles/syslog
