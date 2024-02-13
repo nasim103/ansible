@@ -1,0 +1,15 @@
+---
+ - import_tasks: install_packages.yaml 
+
+ - name: Configure smtp 
+   lineinfile:
+     backup: yes
+     insertafter: "^#relayhost"
+     regexp: "^relayhost.+$"
+     line: "relayhost = [{{ smtp_ip}}]"
+     path: "{{ smtpconfig }}"
+
+
+
+
+
