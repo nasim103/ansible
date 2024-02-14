@@ -1,0 +1,23 @@
+---
+- name: Check if /etc/resolv.conf exist
+  stat:
+    path: /etc/resolv.conf
+  register: resolve
+
+- name: Obtain List of DNS IP
+  slurp:
+    src: /etc/resolv.conf
+  register: dnslist
+  when: resolve.stat.exists == True
+
+- name: Write the output to a file
+  lineinfile:
+    line: "{{ ansible_hostname }} {{ ansible_default_ipv4.address| default(monitored_address)}}|\t {{ dnslist['content'] | b64decode | regex_findall('\\s*nameserver\\s*(.*)')}}"
+    state: present
+    create: yes
+    path: /tmp/dns_list{{ ansible_date_time.date }}.txt
+  delegate_to: localhost
+
+- name: Print the DNS List
+  debug: 
+    msg: "{{ dnslist['content'] | b64decode | regex_findall('\\s*nameserver\\s*(.*)') }}"
