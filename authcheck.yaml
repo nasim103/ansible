@@ -1,6 +1,0 @@
----
- - name: Checking authentication type
-   gather_facts: false
-   hosts: all
-   roles:
-      - /home/linuxtechiee/mycpode/ansible/roles/authcheck

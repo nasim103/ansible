@@ -1,6 +1,0 @@
----
- - name: Configure NTPD
-   hosts: all
-   become: true
-   roles:
-     - "/home/linuxtechiee/mycode/ansible/roles/ntpd"

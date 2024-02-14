@@ -1,6 +1,0 @@
----
- - name: Configure NetworkManager
-   hosts: all
-   become: true
-   roles:
-     - /home/linuxtechiee/mycode/ansible/roles/dns_config 

@@ -1,7 +1,0 @@
----
- - name: Connection check
-   hosts: all
-   gather_facts: true
-   roles:
-      - /home/linuxtechiee/mycode/ansible/roles/connection_check 
-

@@ -1,7 +1,0 @@
----
- - name: Check Home directory
-   hosts: all
-   gather_facts: false
-   roles:
-     - /home/linuxtechiee/mycode/ansible/roles/home_directory
-       

@@ -1,7 +1,0 @@
----
- - name: Installating and configuring tomcat
-   hosts: all
-   become: true
-   roles:
-     - /home/linuxtechiee/mycpode/ansible/roles/tomcat
- 
