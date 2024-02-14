@@ -1,0 +1,68 @@
+---
+- name: Get NTP service status
+  systemd:
+       name: ntpd.service
+  register: ntpd_status
+
+- name: GET Chronyd service status
+  systemd:
+    name: chronyd.service
+  register: chronyd_status
+
+- name: heck NTP file exist
+  stat:
+    path: /etc/ntp.conf
+  register: ntp_file
+
+- name: Check Chronyd file exist
+  stat:
+    path: /etc/chrony.conf
+  register: chrony_file
+
+- name: Read the Content of NTP file
+  slurp:
+    src: /etc/ntp.conf
+  register: ntplist
+  when: ntp_file.stat.exists == True
+
+- name: Read the content og chrony file
+  slurp:
+    src: /etc/chrony.conf
+  register: chronylist
+  when: chrony_file.stat.exists == True
+
+- name: Print the NTP servers list
+  debug:
+    msg: "NTP Status- {{ ntpd_status.status.ActiveState }} {{ ntplist['content'] |  b64decode| regex_findall('^\\s?server\\b.*', multiline=True)}}"
+  when: ntpd_status.status.ActiveState == "active"
+
+- name: Print Chrony NTP List
+  debug: 
+    msg: "Chrony Status - {{ chronyd_status.status.ActiveState }} {{ chronylist['content']| b64decode| regex_findall ('^\\s?server\\b.*', multiline=True)}}"
+  when: chronyd_status.status.ActiveState == "active"
+
+- name: Write NTP list to ntp file
+  lineinfile:
+    line: " {{ ansible_hostname }} {{ ansible_default_ipv4.address|default(monitored_address) }}: \t{{ ntpd_status.status.ActiveState }} \t{{ ntplist['content'] |  b64decode| regex_findall('^\\s?server\\b.*', multiline=True) }}"
+    path: /tmp/ntp_list.txt
+    create: yes
+    mode: 0644
+    owner: root
+    group: roo
+    state: present
+  delegate_to: localhost
+  when: ntpd_status.status.ActiveState == "active"  
+  become: yes
+
+- name: Write Chronyd list to chrony fil
+  lineinfile:
+      line: " {{ ansible_hostname }} {{ ansible_default_ipv4.address|default(monitored_address) }}: \t{{ chronyd_status.status.ActiveState }} \t{{ chronylist['content'] |  b64decode| regex_findall('^\\s?server\\b.*', multiline=True) }}"
+      path: /tmp/ntp_list.txt
+      create: yes
+      mode: 0644
+      owner: root
+      group: root
+      state: present
+  delegate_to: localhost
+  when: chronyd_status.status.ActiveState == "active"
+  become: yes

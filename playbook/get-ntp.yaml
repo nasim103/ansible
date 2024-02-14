@@ -1,0 +1,6 @@
+---
+- name: NTP LIST
+  hosts: all
+  become: true
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/get-ntp"
