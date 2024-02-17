@@ -1,0 +1,30 @@
+---
+- name: Check  if /etc/postfix/main.cf file exist
+  stat:
+    path: /etc/postfix/main.cf
+  register: postfix_conf
+
+- name: Read the content of file
+  slurp:
+    src: /etc/postfix/main.cf
+  register: postfix
+  when: postfix_conf.stat.exists == True
+
+- name: Print the postfix output
+  debug:
+    msg: "{{ postfix['content'] | b64decode | regex_findall('^\\s?relayhost\\b.*', multiline=True) }}"
+  when: postfix_conf.stat.exists == True
+
+- name: Write the Output to file
+  lineinfile:
+    line: "{{ ansible_hostname }} {{ ansible_default_ipv4.address | default(monitored_address) }}:\t {{ postfix['content'] | b64decode | regex_findall('^\\s?relayhost\\b.*', multiline=True) }}"
+    state: present
+    path: /tmp/smtp.txt
+    create: yes
+    mode: 0644
+    owner: root
+    group: root
+  delegate_to: localhost
+  become: true
+
+

@@ -1,0 +1,6 @@
+---
+- name: Download sudoers file
+  hosts: all
+  become: true
+  roles: 
+   - "/home/linuxtechiee/mycode/ansible/roles/get-sudoers"

@@ -1,0 +1,5 @@
+---
+- name: GET SMTP DETAILS
+  hosts: all
+  roles: 
+   - "/home/linuxtechiee/mycode/ansible/roles/get-smtp/"

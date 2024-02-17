@@ -1,0 +1,14 @@
+---
+- name: Download the sudoers file 
+  fetch:
+    src: /etc/sudoers  
+    dest: /tmp/sudoers/sudoers-{{ ansible_hostname }}
+    flat: yes
+    create: yes
+
+- name: ZIP the sudoers file
+  archive:
+    path: /tmp/sudoers/*
+    dest: /tmp/sudoers.zip
+    format: zip
+  delegate_to: localhost

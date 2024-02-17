@@ -1,0 +1,5 @@
+---
+ DESTINATION: /home/linuxtechiee/gittest
+ REPO: https://github.com/nasim103/Alipne.git 
+ VERSION: master
+ FORCE: false

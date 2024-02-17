@@ -1,0 +1,6 @@
+---
+- name: Update repo
+  hosts: centos9 
+  gather_facts: true
+  roles: 
+   - "/home/linuxtechiee/mycode/ansible/roles/git_update/"

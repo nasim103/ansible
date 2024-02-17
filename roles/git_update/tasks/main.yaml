@@ -1,0 +1,38 @@
+---
+- name: Install git on different distro
+  block:
+   - name: Install git on Centos 9
+     yum:
+       name: git
+       state: latest
+     when: ansible_os_family == "Redhat"
+
+
+   - name: Install git on Debian base distro
+     apt:
+       name: git
+       state: latest
+     when: ansible_os_family == "Debian"
+  become: yes
+
+- name: Configure global configuratin
+  git_config:
+    name: user.name
+    value: "Nasim Ahmad"
+    scope: global
+
+- name: Configre email in global config
+  git_config: 
+    name: user.email
+    value: "nasim1039@gmail.com"
+    scope: global
+
+- name: Ensure /opt/git directory exists
+  file:
+    path: "{{ DESTINATION }}"
+    state: directory
+
+- name: clone repository
+  command: git clone {{ REPO }}
+  args: 
+    chdir: "{{ DESTINATION }}"
