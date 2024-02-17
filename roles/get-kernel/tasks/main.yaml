@@ -1,0 +1,23 @@
+---
+- name: Create a file 
+  local_action:
+    module: file
+    path: /tmp/kernel.csv
+    state: touch
+
+- name: Put header in the file
+  local_action:
+    module: lineinfile
+    path: /tmp/kernel.csv
+    line: "Client,Hostname,Kernel Version"
+    state: present
+
+- name: Get kernel info
+  local_action:
+    module: lineinfile
+    path: /tmp/kernel.csv
+    line: "Unknown to Ansible, {{ ansible_nodename }}, {{ ansible_kernel }}"
+    state: present
+
+
+

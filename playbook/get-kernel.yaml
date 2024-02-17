@@ -1,0 +1,5 @@
+---
+- name: GET KERNEL INFORMATION
+  hosts: all
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/get-kernel"

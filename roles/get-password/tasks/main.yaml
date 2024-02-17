@@ -1,0 +1,36 @@
+---
+- name: Create Teamp file
+  tempfile:
+    state: directory
+  register: tempfile
+  become: false
+  delegate_to: localhost
+
+- name: Fetch the password to local dirctory
+  fetch:
+    src: "/etc/passwd"
+    dest: "{{ tempfile.path }}/{{ inventory_hostname }}-passwd.txt"
+    flat: yes
+  become: true
+
+- name: Move the file to Directory
+  command: mv {{ tempfile.path }}/{{ inventory_hostname }}-passwd.txt {{ DIRECTORY }}/{{ inventory_hostname }}-passwd.txt
+  become: true
+  delegate_to: localhost
+
+- name: Archives the password file
+  archive:
+    path: "{{ DIRECTORY }}/*"
+    dest: "{{ DIRECTORY }}/{{ inventory_hostname }}-passwd.zip"
+    format: zip
+  delegate_to: localhost
+  run_once: yes
+  become: false
+    
+- name: Delete the temp file
+  file:
+    path: "{{ tempfile.path }}"
+    state: absent
+  delegate_to: localhost
+  become: false
+  run_once: yes

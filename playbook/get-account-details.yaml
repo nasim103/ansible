@@ -1,0 +1,6 @@
+---
+ - name: Get user account details
+   hosts: all
+   roles:
+     - "/home/linuxtechiee/mycode/ansible/roles/get-user-details"
+   

@@ -1,0 +1,35 @@
+---
+- name: Create temporary file
+  tempfile:
+    state: directory
+  register: tempfile
+  delegate_to: localhost
+  become: false
+  run_once: yes
+
+- name: Run the script to get the user info
+  script: grab-accounts-linux.sh {{ inventory_hostname }}
+  become: true
+
+- name: Fetch the file to local hosts
+  fetch:
+    src: "/tmp/{{ inventory_hostname }}-grab-accounts-linux.csv"
+    dest: "{{ tempfile.path }}/{{ inventory_hostname }}-linux.csv"
+    flat: yes
+  become: true
+
+- name: Move the file to directory
+  command: mv {{ tempfile.path }}/{{ inventory_hostname }}-linux.csv {{ DIRECTORY }}/linux.csv
+  delegate_to: localhost
+
+- name: Delete the Temporary File
+  file:
+    path: "{{ tempfile.path }}"
+    state: absent
+  delegate_to: localhost
+  become: false
+  run_once: yes
+
+
+
+# tasks file for get-user-details
