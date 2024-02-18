@@ -1,0 +1,39 @@
+---
+- name: Update the repository
+  yum:
+    list: updates
+    update_cache: no
+    use_backend: auto
+  become: yes
+  register: yumoutput
+  check_mode: yes
+  tags: prepatch
+
+- name: Create Prepatch report
+  template:
+    src: prepatch.csv.j2
+    dest: "/tmp/linux-prepatch-report-{{ execution_id }}.csv"
+    lstrip_blocks: yes
+  delegate_to: localhost
+  run_once: yes
+  become: false
+  tags: prepatch
+
+- name: Check Update repository
+  shell: "rpm -qa --last |head -15"
+  register: rpm_check
+  args:
+    warn: false
+  become: true
+  changed_when: false
+  tags: postpatch
+
+- name: Create post patch report
+  template:
+    src: "postpatch.csv.j2"
+    dest: "/tmp/linux-postpatch-report-{{ execution_id }}.csv"
+  delegate_to: localhost
+  run_once: yes
+  become: false
+  tags: postpatch
+

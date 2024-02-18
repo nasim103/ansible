@@ -1,0 +1,7 @@
+HOSTNAME,NAME,INSTALL DATE
+{% for host in ansible_play_hosts %}
+    {% for package in hostvars[host]['rpm_check']['stdout_lines'] %}
+{{ host }},{{ package.split(' ')[0] }},{{ ' '.join(package.split(' ')[1:]).strip() }}
+    {% endfor -%}
+{% endfor %}
+

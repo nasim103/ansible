@@ -1,0 +1,5 @@
+---
+- name: Check NAS exist or not
+  hosts: all
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/nas-check"

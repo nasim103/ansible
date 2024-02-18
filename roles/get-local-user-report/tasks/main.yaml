@@ -1,0 +1,55 @@
+---
+- name: Check if directory exist for report 
+  local_action:
+    module: file
+    path: /home/linuxtechiee/linux
+    state: directory
+    mode: 0770
+  become: false
+
+- name: Create the file for reports
+  local_action:
+    module: file
+    path: /home/linuxtechiee/linux/{{ ansible_hostname }}-reports.txt
+    state: touch
+    mode: 0770
+    owner: linuxtechiee
+    group: linuxtechiee
+
+- name: Add header to file
+  local_action:
+    module: lineinfile
+    path: "/home/linuxtechiee/linux/{{ ansible_hostname }}-reports.txt"
+    line: "Hostname;Username;UID;GECOS;Groups;Shell;Expiration Date;Last Change;Last Login;Locked;Sudo Access;Sudo Roles;Sudo Commands"
+  become: false
+
+- name: Run the script to get the reports
+  script: user-account-check.sh
+
+- name: Set Permission of file
+  file:
+    path: "/tmp/{{ ansible_hostname }}-users.txt"
+    mode: 0777
+
+- name: Fetch the file to local hosts
+  fetch:
+     src: "/tmp/{{ ansible_hostname }}-users.txt"
+     dest: "/home/linuxtechiee/linux/users.txt"
+     flat: yes
+
+- name: Delete the file on remote hosts
+  file:
+    path: "/tmp/{{ ansible_hostname }}-users.txt"
+    state: absent
+
+- name: Grab the output of repot 
+  shell: cat "/home/linuxtechiee/linux/users.txt" >> "/home/linuxtechiee/linux/{{ ansible_hostname }}-reports.txt"
+  delegate_to: localhost
+
+- name: Delete the local report file 
+  file:
+    path: "/home/linuxtechiee/linux/users.txt"
+    state: absent
+
+  
+

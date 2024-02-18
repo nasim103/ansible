@@ -1,0 +1,7 @@
+HOSTNAME,NAME,VERSION,REPO
+{% for host in ansible_play_hosts %}
+    {% for package in hostvars[host]['yumoutput']['results'] %}
+{{ host }},{{ package.name }}.{{ package.arch }},{{ package.version }}-{{ package.release }},{{ package.repo }}
+    {% endfor -%}
+{% endfor %}
+

@@ -1,0 +1,26 @@
+---
+ - name: Create partition 
+   parted:
+    device: "{{ DEVICE }}"
+    state: present
+    number: 1
+    part_start: 0%
+    part_end: 100%
+
+ - name: Create FILESYSTEM
+   filesystem:
+     dev: "{{ PARTITION }}"
+     fstype: "{{ FSTYPE }}"
+     force: "{{ ISFORCED }}"
+
+ - name: Get Mount UUID
+   command: blkid -o value -s UUID {{ PARTITION }}
+   register: uuid
+   changed_when: false
+
+ - name: Mount the parttion 
+   mount:
+     fstype: "{{ FSTYPE }}"
+     path: "{{ MOUNT }}"
+     src: UUID={{ uuid.stdout }}
+     state: mounted

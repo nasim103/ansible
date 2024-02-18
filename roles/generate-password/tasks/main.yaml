@@ -1,0 +1,14 @@
+---
+- name: Generate Password
+  set_fact: 
+    password: "{{ my_password | password_hash('sha512') }}"
+
+- name: Update password for user
+  user: 
+    name: "{{ USER }}"
+    update_password: always
+    password: "{{ password }}"
+
+
+
+

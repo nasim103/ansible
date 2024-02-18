@@ -1,0 +1,5 @@
+---
+- name: Get User Report
+  hosts: all
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/get-local-user-report"

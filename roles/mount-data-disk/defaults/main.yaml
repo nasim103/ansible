@@ -1,0 +1,6 @@
+---
+ DEVICE: /dev/sdb
+ PARTITION: /dev/sdb1
+ FSTYPE: xfs
+ MOUNT: /data
+ ISFORCED: yes

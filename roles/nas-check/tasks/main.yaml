@@ -1,0 +1,27 @@
+---
+- name: Search if any NAS point mounted
+  shell: grep "nfs" /etc/fstab
+  register: nfs_search
+  failed_when: nfs_search.rc > 1
+  changed_when: false
+
+- name: NO NFS FOUND
+  fail:
+    msg: "No NAS mount point found"
+  when: nfs_search.rc > 0
+
+- name: Grab the mount point
+  set_fact:
+     mount_point: "{{ nfs_search.stdout.split(' ')[4] }}"
+
+- name: Create a test file
+  file:
+    path: "{{ mount_point }}/test.txt"
+    state: touch
+  become: yes
+
+- name: Delete the file after test
+  file:
+    path: "{{ mount_point }}/test.txt"
+    state: absent
+

@@ -1,0 +1,7 @@
+---
+- name: Create and Mount disk
+  hosts: centos9
+  gather_facts: false
+  become: yes
+  roles: 
+     - "/home/linuxtechiee/mycode/ansible/roles/mount-data-disk"

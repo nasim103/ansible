@@ -1,0 +1,5 @@
+---
+- name: Patch Report
+  hosts: all
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/patch-report" 
