@@ -1,0 +1,14 @@
+---
+- name: Apply Upgrade for all Package
+  yum:
+    name: "*"
+    state: latest
+    update_cache: no
+    security: no
+  become: yes
+  async: 43200
+  poll: 60
+  notify: Restart the server
+  
+
+# tasks file for apply-patch

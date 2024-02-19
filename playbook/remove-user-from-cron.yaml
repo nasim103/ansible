@@ -1,0 +1,17 @@
+---
+- name: Remove User from CRON 
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    USER: wasim
+  tasks:
+    - name: Remove {{ USER }} from cron
+      lineinfile:
+        dest: "{{ item }}"
+        line: "{{ USER }}"
+        state: absent
+      loop:
+        - /etc/cron.allow
+        - /etc/cron.deny
+

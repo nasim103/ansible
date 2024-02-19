@@ -1,0 +1,19 @@
+---
+- name: Remove User from Sudoers file
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    USER: wasim
+  tasks:
+    - name: Replce the user with none
+      replace:
+        path: "/etc/sudoers"
+        regexp: "{{ item.dirtypattern }}"
+        replace: "{{ item.cleanpattern }}"
+      loop:
+        - {dirtypattern: ',{{ USER }},', cleanpattern: ','}
+        - {dirtypattern: ',{{ USER }}', cleanpattern: ''}
+        - {dirtypattern: '={{ USER }},', cleanpattern: '='}
+        - {dirtypattern: '([^,= ]){{ USER }}([$,= ])', cleanpattern: ''}
+

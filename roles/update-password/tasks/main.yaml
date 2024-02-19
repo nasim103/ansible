@@ -1,0 +1,30 @@
+---
+- name: Check if user exists
+  shell: grep {{ user }} /etc/shadow
+  register: check_out
+  become: yes
+  changed_when: false
+  failed_when: check_out.rc > 1
+
+- name: Checking {{ user }} password type
+  shell: echo "{{ check_out.stdout }}" |grep "AD"
+  register: password_check
+  changed_when: false
+  failed_when: password_check.rc > 1
+  become: false
+  when: check_out.rc == 0
+
+- name: Set Passowrd if the Password Type is AD
+  shell: /usr/sbin/usermod -p  {{ PASSWORD }}  {{ user }};/usr/sbin/usermod -p  {{ PASSWORD }}  {{ user }}
+  when: password_check.rc == 0
+  changed_when: true
+  become: yes
+
+- name: Set the password if account type is local
+  user:
+    name: "{{ user }}"
+    password: "{{  PASSWORD | password_hash('sha512')}}"
+    state: present
+  when: password_check.rc == 1
+  become: yes
+

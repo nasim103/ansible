@@ -1,0 +1,20 @@
+---
+- name: Check the user exists
+  shell: id -nu {{ USER }}
+  register: user_check
+  changed_when: false
+
+- name: Check user primary group
+  shell: id -ng {{ USER }}
+  register: primary_user
+  changed_when: false
+  
+- name: Check If Primary group is same as user name
+  fail:
+    msg: "Primary Grpoup is not the same as user name"
+  when: user_check.stdout  != primary_user.stdout 
+
+- name: Print user info
+  debug:
+    msg: "Primay group of {{ USER }} is same as username"
+  when: user_check.stdout  == primary_user.stdout

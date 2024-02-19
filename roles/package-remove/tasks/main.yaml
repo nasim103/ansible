@@ -1,0 +1,32 @@
+---
+- name: Remove Package for Other than Debian and Redhat Distribution
+  package:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{package}}"
+  when:
+    - ansible_distribution != "Redhat"
+    - ansible_distribution != "Centos"
+    - ansible_distribution != "Debian"
+    - ansible_distribution != "Ubuntu"
+
+- name: Remove Package for Centos and Redhat Base Distribution
+  yum:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ package }}"
+  when: ansible_distrubution == "Centos" or ansible_distribution == "Redhat"
+
+
+- name: Remove Package for Ubuntu and Debian Base Distribution
+  apt:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ package }}"
+  when: ansible_distrubution == "Ubuntu" or ansible_distribution == "Debian"
+  
+
+
+
+
+

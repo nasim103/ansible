@@ -1,0 +1,9 @@
+---
+- name: Restart the server
+  reboot:
+    reboot_timeout: 3600
+  ignore_errors: true
+  become: yes
+
+
+# handlers file for apply-patch

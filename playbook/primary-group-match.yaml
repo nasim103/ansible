@@ -1,0 +1,7 @@
+---
+- name: Check Primary group is same as user name
+  hosts: all
+  become: false
+  gather_facts: false
+  roles:
+     - "/home/linuxtechiee/mycode/ansible/roles/primary-group-match"

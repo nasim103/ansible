@@ -1,0 +1,7 @@
+---
+- name: Patch the server with latest patch
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/apply-patch"
+

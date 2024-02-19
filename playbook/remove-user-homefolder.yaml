@@ -1,0 +1,11 @@
+---
+- name: Remove User Home folder
+  hosts: all
+  become: yes
+  gather_facts: false
+  vars:
+    USER: wasim
+  tasks:
+    - file:
+       path: "/home/{{ USER }}/"
+       state: absent

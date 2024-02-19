@@ -1,0 +1,7 @@
+---
+- name: Remove package for various distibution
+  hosts: all
+  become: yes
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/package-remove"
+

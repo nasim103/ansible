@@ -1,0 +1,7 @@
+---
+ package:
+   - zsh
+   - wget
+   - rsync
+   - vsftp
+   - postfix
