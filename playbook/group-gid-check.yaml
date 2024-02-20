@@ -1,0 +1,6 @@
+---
+- name: GROUP and GID Check
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/group-gid-check"

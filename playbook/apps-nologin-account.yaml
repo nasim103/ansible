@@ -1,0 +1,6 @@
+---
+- name: Create APPS ACCOUNT
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/apps-nologin-account"

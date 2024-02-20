@@ -1,0 +1,17 @@
+---
+- name: Check if user exists
+  getent:
+    database: passwd
+    key: "{{ USER }}"
+    fail_key: False
+
+- name: User Does not exist
+  debug:
+    msg: "User {{ USER }} does not exists"
+  when: getent_passwd[USER] == None
+
+- name: User already exists
+  fail:
+    msg: "User {{ USER }} ALREADY EXISTS"
+  when: getent_passwd[USER] != None
+

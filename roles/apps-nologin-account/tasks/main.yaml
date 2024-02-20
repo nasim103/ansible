@@ -1,0 +1,13 @@
+---
+- name: Create Account with NO Login 
+  user:
+    name: "{{ USER }}"
+    uid: "{{ UID }}"
+    shell: /sbin/nologin
+    expires: 999999.0
+    password_lock: yes
+    comment: "Applicatin Account"
+    group: "{{ GROUP }}"
+  become: true
+
+

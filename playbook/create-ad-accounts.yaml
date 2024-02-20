@@ -1,0 +1,6 @@
+---
+- name: Create AD account
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/create-ad-accounts/"

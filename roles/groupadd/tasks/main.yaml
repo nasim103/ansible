@@ -1,0 +1,10 @@
+---
+- name: Create Group with GID
+  group:
+    name: "{{ item.group }}"
+    gid: "{{ item.gid }}"
+    state: present
+  become: yes
+  loop: "{{ GROUP }}"
+
+

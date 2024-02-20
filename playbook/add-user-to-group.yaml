@@ -1,0 +1,25 @@
+---
+ - name: Check user if exists
+   hosts: all
+   gather_facts: false
+   become: yes
+   vars:
+     USER: wasim
+     GROUP: wheel
+   tasks:
+     - name: Check If user exists
+       getent:
+         database: passwd
+         key: "{{ USER }}"
+
+     - name: Add {{ USER }} to {{ GROUP }} 
+       user:
+         name: "{{ USER }}"
+         groups: "{{ GROUP }}"
+         append: true
+        
+
+       
+
+        
+

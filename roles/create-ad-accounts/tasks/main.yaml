@@ -1,0 +1,42 @@
+---
+- name: Check the Password type
+  command: grep -E "PASSWORDINAD|ADPW|CSSPW|ADPASSWORD"  /etc/shadow
+  register: passwordinad_check
+  become: true
+  changed_when: False
+  ignore_errors: yes
+  check_mode: no
+
+- block:
+  - name: Creating AD Account
+    user:
+        name: "{{ item.user }}"
+        shell: "{{ item.shell }}"
+        group: "{{ item.group }}"
+        groups: "{{ item.groups }}"
+        uid: "{{ item.uid }}"
+        home: "{{ item.home }}"
+        create_home: yes
+        comment: "{{ item.comment }}"
+        password: PASSWORDINAD
+    become: true  
+    loop: "{{ useradd }}"
+    when: passwordinad_check == 1
+
+- block:
+  - name: Create Local account
+    user: 
+        name: "{{ item.name }}"
+        shell: "{{ item.shell }}"
+        group: "{{ item.group }}"
+        groups: "{{ item.groups }}"
+        uid: "{{ item.uid }}"
+        home: "{{ item.home }}"
+        create_home: yes
+        comment: "{{ item.comment }}"
+        password: "{{ PASSWORD | password_hash('sha512') }}"
+    become: true
+    loop: "{{ useradd }}"
+    when: passwordinad_check.rc != 0
+
+

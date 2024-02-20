@@ -1,0 +1,6 @@
+---
+- name: GROUPADD
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/groupadd"

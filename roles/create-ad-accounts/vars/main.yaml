@@ -1,0 +1,9 @@
+---
+useradd:
+  - { "name": "tausif", "group": "admin","home": "/home/tausif", "uid": "2001", "groups": "wheel", "comment": "This is Tausif", shell: '/bin/bash' }
+  - { name: 'tanweer', group: 'tanweer', home: '/home/tanweer', uid: '2002', groups: '', comment: 'This is Tanweer', shell: '/bin/ksh '}
+  - { name: 'kalim', group: 'kalim', home: '/home/kalim', uid: '2003', groups: 'test', comment: 'This is kalim', shell: '/bin/bash' }
+  - { name: 'sonu',   group: 'admin', home: '/home/sonu', uid: '2005', groups: 'admin', comment: 'This is sonu', shell: '/bin/csh' }
+  - { name: 'sibbu' , group: 'admin', home: '/home/sibbu', uid: '2006', groups: 'admin', comment: 'This is sibbu', shell: '/bin/bash' }
+
+PASSWORD: Password@123

@@ -1,0 +1,28 @@
+---
+- name: Check GROUP and GID Exists
+  getent:
+    database: group
+    key: "{{ GROUP }}"
+    fail_key: false
+  ignore_errors: true
+
+- name: GROUP is already exists
+  fail:
+    msg: "{{ GROUP }} is already exists"
+  when: getent_group[GROUP] != None
+
+- name: Checking GID if exists
+  shell: getent group "{{ GID }}"
+  register: gid_out
+  ignore_errors: yes
+
+- name: GID is already exists
+  fail:
+    msg: " {{ GID }} is already exists"
+  when: gid_out.rc != 2
+
+- name: Group and GID is available
+  debug:
+    msg: "{{ GROUP }} and {{ GID }} is already available"
+
+

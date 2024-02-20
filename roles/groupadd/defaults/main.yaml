@@ -1,0 +1,4 @@
+---
+ GROUP:
+   - { group: 'kalim', gid: '2600' }
+   - { group: 'tanweer', gid: '2700' }

@@ -1,0 +1,15 @@
+---
+- name: Remove user from group
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    USER: wasim
+    GROUP: wasim
+  tasks:
+    - name: Remove user from all group except {{ GROUP }}
+      user:
+        name: "{{ USER }}"
+        groups: "{{ GROUP }}"
+        append: no
+    

@@ -1,0 +1,8 @@
+---
+- name: PowerOff the server
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Shuting Down the worker node and controller node
+      command: shutdown 

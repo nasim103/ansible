@@ -1,0 +1,52 @@
+---
+- name: Check the account type
+  shell: grep -E "ADPASSWORD|PASSWORDINAD|ADPW|CSSADPW" /etc/shadow
+  register: passwordinad_check
+  changed_when: false
+  become: true
+  ignore_errors: yes
+  check_mode: no
+
+- block:
+   - name: Create service Account with AD password type
+     user:
+       name: svc_admin
+       shell: /bin/bash
+       home: /home/svc_admin
+       password: PASSWORDINAD
+       comment: "Service Account"
+       groups: wheel
+       create_home: yes
+     become: true
+     when: passwordinad_check.rc == 0
+
+   - name: Make sure service account not expired
+     shell: chage -M -1 svc_admin
+     when: passwordinad.rc == 0
+
+  rescue:
+   - name: Create service account with Local password
+     user:
+       name: svc_admin
+       shell: /bin/bash
+       home: /home/svc_admin
+       comment: "Service Admin Account"
+       password: "$6$rATpsm.8Ll3mgf9d$p4TSH8CewSfB70o1MDLH2vlTqdHQdY//z8nCmq/./YBctFWpBqCF5bRgZWbGd/oL7XSmVl.T3mLTLoVphLjAk."
+       groups: wheel
+       create_home: yes
+     become: yes
+     when: passwordinad_check != 0
+  always:
+   - name: Add Service Account in SUDO
+     lineinfile:
+      path: "/etc/sudoers"
+      state: present
+      backup: yes
+      line: "%svc_admin  ALL=(ALL)    ALL "
+      validate: '/usr/sbin/visudo -qcf %s'
+     become: true
+  
+
+
+
+

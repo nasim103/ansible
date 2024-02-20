@@ -1,0 +1,13 @@
+---
+- name: Change user shell
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    USER: wasim
+  tasks:
+    - name: Change User SHELL
+      user:
+        name: "{{ USER }}"
+        shell: /bin/csh
+

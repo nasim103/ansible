@@ -1,0 +1,6 @@
+---
+- name: CHECK IF USER EXISTS
+  hosts: all
+  gather_facts: false
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/roles/user-check"

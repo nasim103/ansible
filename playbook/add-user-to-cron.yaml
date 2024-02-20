@@ -1,0 +1,27 @@
+---
+- name: Add user to cron file
+  hosts: all
+  gather_facts: false
+  vars:
+    USER: wasim
+  tasks:
+    - name: check if user exists
+      getent:
+        database: passwd
+        key: "{{ USER }}"
+
+    - name: Check if cron.allow file exists and if not then create it
+      file:
+        path: "/etc/cron.allow"
+        state: touch
+      become: true
+      run_once: yes
+        
+    - name: Adding {{ USER }} to cron.allow file
+      lineinfile:
+        path: "/etc/cron.allow"
+        line: "{{ USER }}"
+        state: present
+      become: yes 
+      
+      
