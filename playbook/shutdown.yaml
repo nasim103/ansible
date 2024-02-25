@@ -3,6 +3,8 @@
   hosts: all
   gather_facts: false
   become: true
+  remote_user: ansible
+  become_user: root
   tasks:
     - name: Shuting Down the worker node and controller node
       command: shutdown 

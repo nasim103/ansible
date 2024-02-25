@@ -1,0 +1,9 @@
+---
+- name: Ensure nodev is set in /tmp partition
+  mount:
+    path: "{{ item.mount }}"
+    state: mounted
+    src: "{{ item.device }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.options.split(',')| union(['nodev'])| join(',') }}"
+  loop: "{{ ansible_mounts }}"

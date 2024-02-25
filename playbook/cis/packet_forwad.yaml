@@ -1,0 +1,18 @@
+---
+- name: Ensure packet forward is disabled
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure packet Forward is disabled
+      sysctl:
+        name: "{{ item }}"
+        value: '0'
+        state: present
+        ignoreerrors: yes
+        reload: yes
+        sysctl_set: yes
+      with_items:
+        - net.ipv4.conf.all.send_redirects
+        - net.ipv4.conf.default.send_redirects
+

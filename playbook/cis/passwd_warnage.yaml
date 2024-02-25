@@ -1,0 +1,23 @@
+---
+- name: Ensure user password Mindays set to 7
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Collect the list of user
+      shell: "egrep ^[^:]+:[^\\!*PASSWORDINAD] /etc/shadow | cut -d: -f1"
+      register: user_output
+
+
+    - name: Ensure user password max day should be 90 days or less
+      lineinfile:
+        path: /etc/login.defs
+        regexp: "^PASS_WARN_AGE"
+        line: "PASS_MIN_DAYS\t 7"
+        state: present
+        backup: yes
+        
+
+    - name: Set Max days for all user to 90 days
+      shell: "chage --warndays 7 {{ item }}"
+      with_items: "{{ user_output.stdout_lines }}"

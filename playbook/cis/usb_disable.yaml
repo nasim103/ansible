@@ -1,0 +1,21 @@
+---
+- name: Disable USB Storage
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    modeprobe: "/etc/modprobe.d/cis.conf"
+  tasks:
+    - name: Check if modeprobe file exists
+      stat: 
+        path: "{{ modeprobe }}"
+      register: modprobe
+
+    - name: Ensure USB disabled
+      lineinfile:
+        path: "{{ modeprobe }}"
+        state: present
+        backup: yes
+        regexp: "^install usb-storage"
+        line: "install usb-storage /bin/true"
+      when: modprobe.stat.exists is defined and modprobe.stat.exists

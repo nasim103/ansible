@@ -1,0 +1,15 @@
+---
+- name: Ensure cis benchmark set on /dev/shm
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: "Ensure nodev option set on /dev/shm partition\n
+             Ensure noexec option set on /dev/shm partition\n
+             Ensure nosuid option set on /dev/shm partition"
+      mount:
+        path: "/dev/shm"
+        src: tmpfs
+        state: mounted
+        fstype: tmpfs
+        opts: defaults,nosuid,noexec,nodev

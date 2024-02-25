@@ -1,0 +1,63 @@
+---
+- name: Ensure Umask set to 027 or less
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    directory: /tmp/script
+
+  tasks:
+    - name: Ensure Script Directory Created on Remote Hosts
+      file:
+        path: "{{ directory }}"
+        state: directory
+        mode: 0775
+    - name: Copy Audit Script
+      copy:
+        src: /home/linuxtechiee/mycode/ansible/script/create_home.sh
+        dest: "{{ directory }}"
+        mode: 0775
+        owner: linuxtechiee
+        group: linuxtechiee
+
+    - name: Audit existence of users' home directories (Scored)
+      command: ./create_home.sh
+      args:
+        chdir: "{{ directory }}"
+      register: create_home_out
+
+    - name: Ensure users own their home directories (Scored) copy
+      copy:
+        src: /home/linuxtechiee/mycode/ansible/script/user_own_home.sh
+        dest: "{{ directory }}"
+        mode: 0775
+        owner: linuxtechiee
+        group: linuxtechiee
+
+    - name: Ensure users own their home directories (Scored)
+      command: ./user_own_home.sh
+      args:
+        chdir: "{{ directory }}"
+      register: user_home_out
+
+    - name: Ensure no unown dot file/directory copy
+      copy:
+        src: /home/linuxtechiee/mycode/ansible/script/dot_file.sh
+        dest: "{{ directory }}"
+        mode: 0775
+        owner: linuxtechiee
+
+
+    - name: Running dot file script
+      command: ./dot_file.sh
+      args:
+        chdir: "{{ directory }}"
+      register: dot_out
+
+    - name: Print the output
+      debug:
+       msg: 
+         - "{{ create_home_out.stdout_lines }}"
+         - "{{ user_home_out.stdout_lines }}"
+         - "{{ dot_out.stdout_lines }}"
+      ignore_errors: yes

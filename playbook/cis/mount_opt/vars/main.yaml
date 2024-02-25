@@ -1,0 +1,4 @@
+---
+ ansible_mounts:
+   - { mount: '/tmp', device: '/dev/mapper/vg0-tmp', options: 'nodev', fstype: 'xfs' }
+   - { mount: '/tmp', device: '/dev/mapper/vg0-tmplv', options: 'nodev', fstype: 'xfs' }

@@ -1,0 +1,37 @@
+---
+- name: Ensure auditd file is configured
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure max_log_file  is set to 100MB
+      lineinfile:
+        path: /etc/audit/auditd.conf
+        state: present
+        regexp: "^max_log_file ="
+        line: "max_log_file = 100 "
+      notify: auditd
+
+    - name: Ensure log file  rotation is set
+      lineinfile:
+        path: /etc/audit/auditd.conf
+        state: present
+        regexp: "num_logs = "
+        line: "num_logs = 5"
+      notify: auditd
+
+
+    - name: Ensure log rotation is set
+      lineinfile:
+        path: /etc/audit/auditd.conf
+        state: present
+        regexp: "max_log_file_action ="
+        line: "max_log_file_action = ROTATE"
+      notify: auditd
+
+  handlers:
+    - name: auditd
+      service:
+        name: auditd
+        state: restarted
+

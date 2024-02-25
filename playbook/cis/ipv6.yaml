@@ -1,0 +1,57 @@
+---
+- name: Disabled IPV6 from all configuration
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Disabled ipv6 from sysconfig file
+      lineinfile:
+        dest: /etc/sysconfig/network
+        regexp: "^NETWORKING_IPV6"
+        line: "NETWORKING_IPV6=no"
+        state: present
+        backup: yes
+
+    - name: Disabled IPV6 from sysconfig 2 file
+      lineinfile:
+        dest: /etc/sysconfig/network
+        state: present
+        regexp: "^IPV6INIT"
+        line: "IPV6INIT=no"
+
+    - name: Disabled IPv6 from modprobe.d file
+      lineinfile:
+        path: /etc/modprobe.d/cis.conf
+        state: present
+        line: "options ipv6 disable=1"
+
+    - name: Disabled IPv6 from sysctl.conf file
+      sysctl:
+        name: net.ipv6.conf.all.disable_ipv6
+        value: 1
+        state: present
+        ignoreerrors: yes
+        reload: yes
+
+    - name: Ensure IPv6 disabled default
+      sysctl:
+        name: net.ipv6.conf.default.disable_ipv6
+        value: 1
+        state: present
+        ignoreerrors: yes
+        reload: yes
+
+    - name: Ensure IPv6 disable at running kernel 
+      shell: sysctl -w net.ipv6.conf.all.disable_ipv6=1
+
+    - name: Ensure IPv6 is disabled (active kernel default)
+      shell: sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+    - name: Ensure IPv6 is disabled (active kernel flush route)
+      shell: sysctl -w net.ipv6.route.flush=1
+
+
+
+
+      
+

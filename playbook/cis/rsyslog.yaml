@@ -1,0 +1,15 @@
+---
+- name: Ensure rsyslog is configure and log send to remote hosts
+  hosts: all
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Ensure rsyslog is configured
+      lineinfile:
+        path: /etc/rsyslog.conf
+        regexp: '^#?\\*\\.\\*\\s+'
+        line: '*.* @192.168.243.137:514'
+        state: present
+
+
+ 

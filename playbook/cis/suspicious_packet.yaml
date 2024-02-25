@@ -1,0 +1,18 @@
+---
+- name: Ensure suspicious packets are logged (Scored)
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure suspicious packets are logged (Scored)
+      sysctl:
+        name: "{{ item }}"
+        value: '1'
+        state: present
+        ignoreerrors: yes
+        reload: yes
+        sysctl_set: yes
+      with_items:
+        - net.ipv4.conf.all.log_martians
+        - net.ipv4.conf.default.log_martians
+

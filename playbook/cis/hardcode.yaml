@@ -1,0 +1,32 @@
+---
+- name: Ensure core dump are restricted
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure core dump is restricted in /etc/security/limits.conf
+      lineinfile:
+        path: /etc/security/limits.conf
+        state: absent
+        backup: yes
+        line: " * hard code 0 "
+
+    - name: Ensure core dump is restricted in /etc/security/limits.conf
+      lineinfile:
+        path: /etc/security/limits.conf
+        state: present
+        backup: yes
+        regexp: "^ * hard code "
+        line: " * hard core 0 "
+    - name: Set code dump disable in /etc/sysctl.conf
+      lineinfile:
+        path: /etc/sysctl.conf
+        state: present
+        backup: yes
+        regexp: "^fs.suid_dumpable = "
+        line: "fs.suid_dumpable = 0"
+
+    - name: Re-read the sysctl file
+      shell:  sysctl -w fs.suid_dumpable=0
+
+

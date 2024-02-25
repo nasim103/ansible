@@ -1,0 +1,17 @@
+---
+- name: Ensure source routed packets are not accepted
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure source routed packets are not accepted
+      sysctl:
+        name: "{{ item }}"
+        value: '0'
+        state: present
+        ignoreerrors: yes
+        sysctl_set: yes
+      with_items:
+        - net.ipv4.conf.all.accept_source_route
+        - net.ipv4.conf.default.accept_source_route
+

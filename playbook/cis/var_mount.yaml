@@ -1,0 +1,23 @@
+---
+- name: Ensure /var/tmp exists
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensur /var/tmp exists
+      shell: mount | grep /dev
+      register: var_tmp
+      check_mode: false
+      changed_when: false
+
+    - name: Ensure /var/tmp mounted
+      mount:
+        path: /var/tmp
+        src: /tmp
+        fstype: none
+        state: mounted
+        opts: defaults,bind,nodev,noexec
+      when: "'/var/tmp' not in var_tmp.stdout"
+
+
+

@@ -1,0 +1,13 @@
+---
+- name: Ensure Journald is configure and send the log to remote
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure Journald is configure and send the log to remote
+      lineinfile:
+        path: /etc/systemd/journald.conf
+        regexp: "^Storage="
+        line: "Storage=persistent"
+        state: present
+

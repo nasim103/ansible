@@ -1,0 +1,16 @@
+---
+- name: Ensure /tmp is seperate partition
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure /tmp exists
+      shell: " mount | grep /tmp"
+      register: temp_out
+      check_mode: false
+
+
+    - name: Priting message
+      debug:
+          msg: Create /tmp partition manually
+      when: "temp_out.stdout and '/tmp' not in temp_out.stdout"
+

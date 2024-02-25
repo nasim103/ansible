@@ -1,0 +1,27 @@
+---
+- name: Ensure user password locak after 30 days of expire
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Collect the list of user
+      shell: "egrep ^[^:]+:[^\\!*PASSWORDINAD] /etc/shadow | cut -d: -f1"
+      register: user_output
+
+
+    - name: Ensure user password max day should be 90 days or less
+      lineinfile:
+        path: /etc/login.defs
+        regexp: "^PASS_MAX_DAYS"
+        line: "PASS_MAX_DAYS=90"
+        state: present
+        backup: yes
+        
+
+    - name: Set password change date to today
+      shell: "chage -d '(date +%Y-%m-%d)' {{ item }}"
+      with_items: "{{ user_output.stdout_lines }}"
+
+    - name: Set Max days for all user to 90 days
+      shell: "chage --maxdays 90 {{ item }}"
+      with_items: "{{ user_output.stdout_lines }}"

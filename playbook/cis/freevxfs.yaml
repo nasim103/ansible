@@ -1,0 +1,42 @@
+---
+- name: Ensure freevxfs file system disable and unloaded
+  hosts: all
+  become: yes
+  gather_facts: false
+  vars:
+    modeprobe: "/etc/modeprobe.d/cis.conf"
+  tasks:
+    - name: Ensure modeprobe conf file exists
+      stat:
+        path: "{{ modeprobe }}"
+      register: modeprobe
+      
+    - name: Check if freevsfs filesystem is disabled
+      command: modprobe -n -v freevxfs
+      register: mod_freevxfs
+      check_mode: false
+      changed_when: mod_freevxfs.stdout is search('freevxfs')
+      failed_when: mod_freevxfs.stdout not in (0,1)
+      
+    - name: Check if freevxfs file system is loaded
+      command: lsmod
+      register: lsmod
+      check_mode: false
+      changed_when: lsmod.stdout is search('freevxfs')
+
+    
+    - name: Unload freevxfs filesystem if requird 
+      command: modprobe -r freevxfs
+      register: freevxfs_remove
+      check_mode: false
+      when: lsmod.stdout is search('freevxfs.*')
+
+
+    - name: Ensure the mounting of freevxfs file system is disable
+      lineinfile:
+        dest: "{{ modeprobe  }}"
+        regexp: "^install freevxfs"
+        line: "install freevxfs /bin/true"
+        state: present
+      when: modeprobe.stat.exists is defined and modeprobe.stat.exists 
+

@@ -1,0 +1,14 @@
+---
+- name: Ensure Adress space layout Randamnization ASLR is set
+  become: true
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure Adress space layout Randamnization ASLR is set sysctl
+      sysctl:
+        name: kernel.randomize_va_space
+        value: '2'
+        state: present
+        reload: yes
+        ignoreerrors: yes
+        

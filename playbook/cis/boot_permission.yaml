@@ -1,0 +1,20 @@
+---
+- name: Configure boot and grub permission are correctly configured
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check /boot file is exists
+      stat:
+        path: "/boot/grub2/grub.cfg"
+      register: grub_st
+
+    - name: COnfigure grub file permission
+      file:
+        path: "/boot/grub2/grub.cfg"
+        owner: root
+        group: root
+        mode: "og-rwx"
+      when: grub_st.stat.exists
+
+    

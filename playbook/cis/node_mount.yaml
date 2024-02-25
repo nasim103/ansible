@@ -1,0 +1,7 @@
+---
+- name: Ensure nodev set on /tmp partition
+  gather_facts: false
+  become: yes
+  hosts: all
+  roles:
+    - "/home/linuxtechiee/mycode/ansible/playbook/cis/mount_opt/"

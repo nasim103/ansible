@@ -1,0 +1,16 @@
+---
+- name: Ensure Seperate /var/log partition exists
+  hosts: all
+  gather_facts: false
+  become: false
+  tasks:
+    - name: "Ensure /var/log exists"
+      shell: mount | grep /dev
+      register: var_log
+      changed_when: false
+      check_mode: false
+
+    - name: Printing the output
+      debug:
+        msg: " ***** /var/log does not exists"
+      when: "'/var/log' not in var_log.stdout"

@@ -1,0 +1,97 @@
+---
+- name: Ensure Match all line exists
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Ensure Match all Line Exists
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        backup: yes
+        regexp: "^Match"
+        line: "Match all"
+        insertafter: EOF
+        state: present
+      notify: reload sshd
+
+    - name: Ensure SSH Protocol is set to 2
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^Protocol"
+        line: "Protocol 2"
+        state: present
+      notify: reload sshd    
+
+    - name: Ensure ssh log level set to info
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^LogLevel"
+        line: "LogLevel INFO"
+      notify: reload sshd  
+
+
+    - name: Ensure Maximum tries is 4 or less
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^MaxAuthTries"
+        line: "MaxAuthTries 4"
+      notify: reload sshd
+
+    - name: Ensure Ignore Rhosts is set
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^IgnoreRhosts"
+        line: "IgnoreRhosts yes"
+      notify: reload sshd
+
+    - name: Ensure HostbasedAuthentication is disabled
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^HostbasedAuthentication"
+        line: "HostbasedAuthentication no"
+      notify: reload sshd
+        
+    - name: Ensure  Root Login is disabled
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^#?PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: reload sshd
+
+    - name: Ensure  Empty Password is disabled
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^#?PermitEmptyPasswords"
+        line: "PermitEmptyPasswords no"
+      notify: reload sshd
+
+    - name: Ensure PermitUser Env is disabled
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^#?PermitUserEnvironment"
+        line: "PermitUserEnvironment no"
+      notify: reload sshd
+
+    - name: Ensure only Permit Ciphers are used 
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: "^Ciphers"
+        line: "Ciphers aes128-ctr,aes192-ctr,aes256-ctr"
+      notify: reload sshd
+
+  handlers:
+    - name: reload sshd
+      service:
+        name: sshd
+        state: restarted
+
+          
+

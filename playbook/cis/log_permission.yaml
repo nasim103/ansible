@@ -1,0 +1,19 @@
+---
+- name: Ensure Journald is configure and send the log to remote
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure Journald is configure and send the log to remote
+      find:
+        paths: "/var/log"
+        file_type: file
+        recurse: yes
+      register: find_file
+
+    - name: Ensure Permission are set on all log file
+      file:
+        path: "{{ item.path }}"
+        mode: "g-wx,o-rwx"
+        state: file
+      with_items: "{{ find_file.files }}"

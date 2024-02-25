@@ -1,0 +1,20 @@
+---
+- name: Ensure AIDE is install and initiliaze
+  gather_facts: false
+  become: true
+  hosts: all
+  tasks:
+    - name: Install aide is installed
+      yum: 
+        name: aide
+        state: latest
+      notify: initialize aide
+
+  handlers:
+
+    - name: initialize aide
+      shell: /usr/sbin/aide --init
+
+
+
+

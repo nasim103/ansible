@@ -1,0 +1,28 @@
+---
+- name: Configure GPG key
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Configure GPG key in centos 7
+      rpm_key:
+        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+        state: present
+      when: ansible_distribution == "Centos"
+      when: ansible_distribution_major_version == "9"
+
+    - name: Configure GPG Key in Centos 7
+      rpm_key:
+        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+        state: present
+      when: ansible_distribution == "Centos"
+      when: ansible_distribution_major_version == "7"
+      
+    - name:  Configure GPG Key globally
+      lineinfile:
+         path: /etc/yum.conf
+         state: present
+         regexp: "^gpgcheck="
+         line: "gpgcheck=1"
+
+

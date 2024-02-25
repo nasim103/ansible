@@ -1,0 +1,18 @@
+---
+- name: Ensure autofs service should be stopped and disabled
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check if autofs file is exists
+      stat:
+        path: /etc/sysconfig/autofs
+      register: autofs
+    
+    - name: Ensure autofs service is disabled
+      service:
+        name: autofs
+        state: stopped
+        enabled: false
+      when: autofs.stat.exists
+

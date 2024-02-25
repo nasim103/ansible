@@ -1,0 +1,24 @@
+---
+- name: Ensure Umask set to 027 or less
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Ensure umask set 027
+      lineinfile:
+        path: "{{ item }}"
+        state: present
+        regexp: "^umask "
+        line: "umask 027"
+      with_items:
+        - "/etc/profile"
+        - "/etc/bashrc"
+      notify: reload configure file
+
+  handlers:
+    - name: reload configure file
+      shell: "source {{ item }}"
+      with_items:
+        - "/etc/profile"
+        - "/etc/bashrc"
+  

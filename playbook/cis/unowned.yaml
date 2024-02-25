@@ -1,0 +1,24 @@
+---
+- name: Ensure no unowned file directory exists
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check if any unowned file exists
+      shell:  "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser"
+      register: unowned
+
+    - name: Print the unowned file
+      debug:
+        msg: "Below are List of unowned file/directory\n {{ unowned.stdout_lines }}"
+      when: unowned.stdout_lines|length > 0
+
+    - name: 6.1.12 - Audit if any ungrouped files or directories exist
+      shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup
+      register: ungroup
+
+
+    - name: Print the ungroup file
+      debug:
+        msg: "Below are List of unowned file/directory\n {{ ungroup.stdout_lines }}"
+      when: ungroup.stdout_lines|length > 0

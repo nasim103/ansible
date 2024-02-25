@@ -1,0 +1,16 @@
+---
+- name: Ensure sticky bit is set on all world-writable directories
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check the list of dirctory which are world writable
+      shell: df --local -P | awk '{ if (NR!=1) print $6 }' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null 
+      register: worldwriteable
+      changed_when: false
+      check_mode: false
+
+    - name:  Ensure sticky bit is set on all world-writable directories
+      shell: df --local -P | awk '{ if (NR!=1) print $6 }' | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+      when: worldwriteable.stdout
+
